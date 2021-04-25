@@ -1,34 +1,29 @@
 package agh.cs.sg;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class SimulationEngine implements IEngine {
     private List<MoveDirection> moveDirections;
-    private List<Animal> animals;
-    private IWorldMap map;
+    private Map<Vector2d, Animal> animals;
 
 
     SimulationEngine(List<MoveDirection> moveDirections, IWorldMap map, List<Vector2d> animalsVectorList) {
         animalsVectorList.forEach(animalVector -> {
-            map.place(new Animal(map, animalVector));
+            Animal animal = new Animal(map, animalVector);
+            map.place(animal);
         });
 
         this.moveDirections = moveDirections;
         this.animals = map.getAnimals();
-        this.map = map;
     }
 
     public void run() {
-        Iterator<Animal> animalIterator = animals.iterator();
         Iterator<MoveDirection> moveDirectionsIterator = moveDirections.iterator();
 
         while (moveDirectionsIterator.hasNext()) {
-            while (animalIterator.hasNext()) {
-                animalIterator.next().move(moveDirectionsIterator.next());
+            for(Animal animal : animals.values()) {
+                animal.move(moveDirectionsIterator.next());
             }
-
-            animalIterator = animals.iterator();
         }
     }
 }

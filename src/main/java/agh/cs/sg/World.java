@@ -9,7 +9,7 @@ public class World {
 
         List<MoveDirection> directions = new OptionsParser().parse(args);
         IWorldMap grassField = new GrassField(5);
-        List<Vector2d> positions = Arrays.asList(new Vector2d(2,2));
+        List<Vector2d> positions = Arrays.asList(new Vector2d(2,2), new Vector2d(2,3));
         IEngine engine = new SimulationEngine(directions, grassField, positions);
         engine.run();
 

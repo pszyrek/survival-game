@@ -1,12 +1,9 @@
 package agh.cs.sg;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GrassField extends AbstractWorldMap {
-    private List<Grass> grassList = new ArrayList<>();
+    private Map<Vector2d, Grass> grassList = new HashMap<>();
 
     GrassField(int grassCount) {
         this.upperRight = new Vector2d(20, 20);
@@ -14,7 +11,7 @@ public class GrassField extends AbstractWorldMap {
         int maxX = 10;
         int maxY = 10;
 
-        grassList.add(new Grass(new Vector2d(2, 3)));
+        grassList.put(new Vector2d(2, 3),  new Grass(new Vector2d(2, 3)));
 
         Random rand = new Random();
 
@@ -25,23 +22,20 @@ public class GrassField extends AbstractWorldMap {
             Vector2d vector = new Vector2d(randX, randY);
 
             if(!isOccupied(vector)) {
-                grassList.add(new Grass(vector));
+                Grass grass = new Grass(vector);
+                grassList.put(vector, grass);
             }
         }
     }
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        for (Animal animal : animals) {
-            if(animal.getPosition().equals(position)) {
-                return true;
-            }
+        if(animals.containsKey(position)) {
+            return true;
         }
 
-        for (Grass grass : grassList) {
-            if(grass.getPosition().equals(position)) {
-                return true;
-            }
+        if(grassList.containsKey(position)) {
+            return true;
         }
 
         return false;
@@ -49,16 +43,13 @@ public class GrassField extends AbstractWorldMap {
 
     @Override
     public Object objectAt(Vector2d position) {
-        for (Animal animal : animals) {
-            if(animal.getPosition().equals(position)) {
-                return animal;
-            }
+
+        if(animals.containsKey(position)) {
+            return animals.get(position);
         }
 
-        for (Grass grass : grassList) {
-            if(grass.getPosition().equals(position)) {
-                return grass;
-            }
+        if(grassList.containsKey(position)) {
+            return grassList.get(position);
         }
 
 
@@ -66,18 +57,13 @@ public class GrassField extends AbstractWorldMap {
     }
 
     public void eatGrass(Vector2d position) {
-        Iterator<Grass> grassIterator = grassList.iterator();
+        Iterator<Grass> grassIterator = grassList.values().iterator();
 
         while(grassIterator.hasNext()) {
             if(grassIterator.next().getPosition().equals(position)) {
+                System.out.println("mmm");
                 grassIterator.remove();
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        MapVisualizer mapVisualizer = new MapVisualizer(this);
-        return mapVisualizer.draw(lowerLeft, upperRight);
     }
 }

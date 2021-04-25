@@ -2,6 +2,7 @@ package agh.cs.sg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public interface IWorldMap {
     boolean canMoveTo(Vector2d position);
@@ -14,5 +15,5 @@ public interface IWorldMap {
 
     Object objectAt(Vector2d position);
 
-    List<Animal> getAnimals();
+    Map<Vector2d, Animal> getAnimals();
 }

@@ -21,10 +21,11 @@ public class RectangularMap implements IWorldMap {
     }
 
     public boolean place(Animal animal) {
-        if(!isOccupied(animal.getPosition())) {
-            animals.add(animal);
-            return true;
-        }
+            if(!isOccupied(animal.getPosition())) {
+                animals.add(animal);
+                return true;
+            }
+
         return false;
     }
 

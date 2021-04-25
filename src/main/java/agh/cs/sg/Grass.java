@@ -1,6 +1,6 @@
 package agh.cs.sg;
 
-public class Grass {
+public class Grass implements IMapElement {
     Vector2d currentPosition;
 
     Grass(Vector2d position) {

@@ -10,6 +10,8 @@ public interface IWorldMap {
 
     boolean isOccupied(Vector2d position);
 
+    void eatGrass(Vector2d position);
+
     Object objectAt(Vector2d position);
 
     List<Animal> getAnimals();

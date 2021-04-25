@@ -1,6 +1,6 @@
 package agh.cs.sg;
 
-public class Animal {
+public class Animal implements IMapElement {
     private MapDirection orientation = MapDirection.NORTH;
     private Vector2d pos;
     private IWorldMap map;
@@ -27,6 +27,8 @@ public class Animal {
             if(map.canMoveTo(pos.add(orientation.toUnitVector()))) {
                 pos = pos.add(orientation.toUnitVector());
             }
+
+            map.eatGrass(pos);
         }
     }
 

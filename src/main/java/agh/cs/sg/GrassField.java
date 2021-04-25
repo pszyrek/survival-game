@@ -1,19 +1,20 @@
 package agh.cs.sg;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class GrassField implements IWorldMap {
+public class GrassField extends AbstractWorldMap {
     private List<Grass> grassList = new ArrayList<>();
-    private Vector2d upperRight;
-    private Vector2d lowerLeft = new Vector2d(0, 0);
 
     GrassField(int grassCount) {
-        int maxX = (int) Math.sqrt(grassCount*10);
-        int maxY = (int) Math.sqrt(grassCount*10);
+        this.upperRight = new Vector2d(20, 20);
 
-        this.upperRight = new Vector2d(maxX, maxY);
+        int maxX = 10;
+        int maxY = 10;
+
+        grassList.add(new Grass(new Vector2d(2, 3)));
 
         Random rand = new Random();
 
@@ -30,16 +31,13 @@ public class GrassField implements IWorldMap {
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
-        return false;
-    }
-
-    @Override
-    public boolean place(Animal animal) {
-        return false;
-    }
-
     public boolean isOccupied(Vector2d position) {
+        for (Animal animal : animals) {
+            if(animal.getPosition().equals(position)) {
+                return true;
+            }
+        }
+
         for (Grass grass : grassList) {
             if(grass.getPosition().equals(position)) {
                 return true;
@@ -49,19 +47,32 @@ public class GrassField implements IWorldMap {
         return false;
     }
 
+    @Override
     public Object objectAt(Vector2d position) {
+        for (Animal animal : animals) {
+            if(animal.getPosition().equals(position)) {
+                return animal;
+            }
+        }
+
         for (Grass grass : grassList) {
             if(grass.getPosition().equals(position)) {
                 return grass;
             }
         }
 
+
         return null;
     }
 
-    @Override
-    public List<Animal> getAnimals() {
-        return null;
+    public void eatGrass(Vector2d position) {
+        Iterator<Grass> grassIterator = grassList.iterator();
+
+        while(grassIterator.hasNext()) {
+            if(grassIterator.next().getPosition().equals(position)) {
+                grassIterator.remove();
+            }
+        }
     }
 
     @Override

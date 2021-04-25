@@ -24,10 +24,10 @@ public class SimulationEngine implements IEngine {
         Iterator<MoveDirection> moveDirectionsIterator = moveDirections.iterator();
 
         while (moveDirectionsIterator.hasNext()) {
-            System.out.println(map.toString());
             while (animalIterator.hasNext()) {
                 animalIterator.next().move(moveDirectionsIterator.next());
             }
+
             animalIterator = animals.iterator();
         }
     }

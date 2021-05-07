@@ -4,19 +4,25 @@ public class Animal implements IMapElement {
     private MapDirection orientation = MapDirection.NORTH;
     private Vector2d pos;
     private IWorldMap map;
+    private int energy;
 
     IPositionChangeObserver observer = null;
 
     Animal(IWorldMap map, Vector2d initialPosition) {
         this.map = map;
         this.pos = initialPosition;
+        this.energy = 0;
     }
 
     public void addObserver(IPositionChangeObserver observer) {
         this.observer = observer;
     }
 
-    public void removeObserver(IPositionChangeObserver observer) {
+    public void addEnergy(int energyLevel) {
+        this.energy += energyLevel;
+    }
+
+    public void removeObserver() {
         this.observer = null;
     }
 
@@ -30,23 +36,17 @@ public class Animal implements IMapElement {
         return pos;
     }
 
-    public void move(MoveDirection direction) {
-        if(direction == MoveDirection.RIGHT) {
-            orientation = orientation.next();
+    public void move(Integer direction) {
+        if(direction > 0) {
+            orientation = orientation.changeDirection(direction);
         }
 
-        if(direction == MoveDirection.LEFT) {
-            orientation = orientation.previous();
+        if(map.canMoveTo(pos.add(orientation.toUnitVector()))) {
+            positionChanged(pos, pos.add(orientation.toUnitVector()));
+            pos = pos.add(orientation.toUnitVector());
         }
 
-        if(direction == MoveDirection.FORWARD || direction == MoveDirection.BACKWARD) {
-            if(map.canMoveTo(pos.add(orientation.toUnitVector()))) {
-                positionChanged(pos, pos.add(orientation.toUnitVector()));
-                pos = pos.add(orientation.toUnitVector());
-            }
-
-            map.eatGrass(pos);
-        }
+        map.eatGrass(pos);
     }
 
     @Override

@@ -52,18 +52,11 @@ public class GrassField extends AbstractWorldMap {
             return grassList.get(position);
         }
 
-
         return null;
     }
 
     public void eatGrass(Vector2d position) {
-        Iterator<Grass> grassIterator = grassList.values().iterator();
-
-        while(grassIterator.hasNext()) {
-            if(grassIterator.next().getPosition().equals(position)) {
-                System.out.println("mmm");
-                grassIterator.remove();
-            }
-        }
+        animals.get(position).addEnergy(2);
+        grassList.remove(position);
     }
 }

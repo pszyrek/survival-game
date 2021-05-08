@@ -5,6 +5,8 @@ public class Animal extends MapElement implements IMapElement {
     private Vector2d pos;
     private int energy;
 
+    private int MAP_DIRECTION = 0;
+
     private IPositionChangeObserver observer = null;
 
     public Animal(Vector2d initialPosition, IPositionChangeObserver observer) {
@@ -29,9 +31,9 @@ public class Animal extends MapElement implements IMapElement {
         return pos;
     }
 
-    public void move(Integer direction) {
-        if(direction > 0) {
-            this.orientation = orientation.changeDirection(direction);
+    public void move() {
+        if(MAP_DIRECTION > 0) {
+            this.orientation = orientation.changeDirection(MAP_DIRECTION);
             return;
         }
 

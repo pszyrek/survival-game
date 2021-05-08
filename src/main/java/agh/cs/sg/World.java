@@ -20,18 +20,18 @@ public class World implements IPositionChangeObserver {
 
     public World() {
         map.put(new Vector2d(2, 3), new Field(new Grass()));
-//        map.put(new Vector2d(2, 4), new Field(new Grass()));
-//        int grassElements = 0;
-//        while(grassElements != GRASS_SIZE) {
-//            int randX = rand.nextInt(MAX_X);
-//            int randY = rand.nextInt(MAX_Y);
-//
-//            Vector2d localization = new Vector2d(randX, randY);
-//            if(!isOccupied(localization)) {
-//                map.put(localization, new Field(new Grass()));
-//                grassElements++;
-//            }
-//        }
+        map.put(new Vector2d(2, 4), new Field(new Grass()));
+        int grassElements = 0;
+        while(grassElements != GRASS_SIZE) {
+            int randX = rand.nextInt(MAX_X);
+            int randY = rand.nextInt(MAX_Y);
+
+            Vector2d localization = new Vector2d(randX, randY);
+            if(!isOccupied(localization)) {
+                map.put(localization, new Field(new Grass()));
+                grassElements++;
+            }
+        }
     }
 
 public Vector2d positionChange(Animal animal, Vector2d position) {

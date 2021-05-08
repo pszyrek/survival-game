@@ -14,17 +14,20 @@ public class SimulationEngine implements IEngine {
         this.map = map.getMap();
     }
 
-    public void run(List<Integer> moveDirections) {
-        for(Integer moveDirection : moveDirections) {
-            for(Field field : map.values()) {
-                if(field.isAnimalExists()){
-                    List<Animal> animals = field.getAnimals();
-                    for(Animal animal : animals) {
-                        animal.move(moveDirection);
-                    }
-                }
+    public void run() {
+        List<Animal> animals = new ArrayList<>();
 
+        for(Field field : map.values()) {
+            if(field.isAnimalExists()){
+                List<Animal> fieldAnimals = field.getAnimals();
+                for(Animal animal : fieldAnimals) {
+                    animals.add(animal);
+                }
             }
+        }
+
+        for(Animal animal : animals) {
+            animal.move();
         }
     }
 }

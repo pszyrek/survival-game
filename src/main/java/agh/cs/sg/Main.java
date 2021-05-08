@@ -11,7 +11,7 @@ public class Main {
         World world = new World();
         List<Vector2d> positions = Arrays.asList(new Vector2d(2,2));
         IEngine engine = new SimulationEngine(world, positions);
-        engine.run(directions);
+        engine.run();
 
         System.out.println(world.toString());
 

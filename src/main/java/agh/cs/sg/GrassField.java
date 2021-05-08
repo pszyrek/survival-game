@@ -28,6 +28,14 @@ public class GrassField extends AbstractWorldMap {
         }
     }
 
+    public boolean isGrassOccupied(Vector2d position) {
+        if(grassList.containsKey(position)) {
+            return true;
+        }
+
+        return false;
+    }
+
     @Override
     public boolean isOccupied(Vector2d position) {
         if(animals.containsKey(position)) {

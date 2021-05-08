@@ -26,27 +26,26 @@ public class Animal implements IMapElement {
         this.observer = null;
     }
 
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
-        if(observer != null) {
-            observer.positionChanged(oldPosition, newPosition);
-        }
-    }
-
     public Vector2d getPosition() {
         return pos;
     }
 
     public void move(Integer direction) {
         if(direction > 0) {
-            orientation = orientation.changeDirection(direction);
+            this.orientation = orientation.changeDirection(direction);
+            return;
         }
 
-        if(map.canMoveTo(pos.add(orientation.toUnitVector()))) {
-            positionChanged(pos, pos.add(orientation.toUnitVector()));
-            pos = pos.add(orientation.toUnitVector());
+        if(map.canMoveTo(this.pos.add(orientation.toUnitVector()))) {
+            Vector2d newPos = this.pos.add(orientation.toUnitVector());
+            observer.positionChanged(this.pos, newPos);
+            this.pos = newPos;
         }
 
-        map.eatGrass(pos);
+
+        if(map.isGrassOccupied(this.pos)) {
+            map.eatGrass(this.pos);
+        };
     }
 
     @Override

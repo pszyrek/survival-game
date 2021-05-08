@@ -7,6 +7,8 @@ public interface IWorldMap {
 
     boolean place(Animal animal);
 
+    boolean isGrassOccupied(Vector2d position);
+
     boolean isOccupied(Vector2d position);
 
     void eatGrass(Vector2d position);

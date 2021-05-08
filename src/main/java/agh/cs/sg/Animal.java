@@ -1,29 +1,23 @@
 package agh.cs.sg;
 
-public class Animal implements IMapElement {
+public class Animal extends MapElement implements IMapElement {
     private MapDirection orientation = MapDirection.NORTH;
     private Vector2d pos;
-    private IWorldMap map;
+    private World map;
     private int energy;
 
-    IPositionChangeObserver observer = null;
-
-    Animal(IWorldMap map, Vector2d initialPosition) {
+    public Animal(World map, Vector2d initialPosition) {
         this.map = map;
         this.pos = initialPosition;
         this.energy = 0;
     }
 
-    public void addObserver(IPositionChangeObserver observer) {
-        this.observer = observer;
+    public int getEnergy() {
+        return this.energy;
     }
 
     public void addEnergy(int energyLevel) {
         this.energy += energyLevel;
-    }
-
-    public void removeObserver() {
-        this.observer = null;
     }
 
     public Vector2d getPosition() {
@@ -36,16 +30,25 @@ public class Animal implements IMapElement {
             return;
         }
 
-        if(map.canMoveTo(this.pos.add(orientation.toUnitVector()))) {
-            Vector2d newPos = this.pos.add(orientation.toUnitVector());
-            observer.positionChanged(this.pos, newPos);
-            this.pos = newPos;
+        Vector2d demandPosition = this.pos.add(orientation.toUnitVector());
+        if(map.isInMapRange(demandPosition)) {
+
+            if(map.isAnimalOccupied(demandPosition)) {
+
+            } else {
+                this.pos = demandPosition;
+                map.place(this);
+            }
         }
 
-
         if(map.isGrassOccupied(this.pos)) {
-            map.eatGrass(this.pos);
-        };
+            eatGrass();
+            map.removeGrass(this.pos);
+        }
+    }
+
+    private void eatGrass() {
+        addEnergy(1);
     }
 
     @Override

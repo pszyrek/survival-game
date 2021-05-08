@@ -1,6 +1,7 @@
 package agh.cs.sg;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface IWorldMap {
     boolean canMoveTo(Vector2d position);
@@ -13,7 +14,7 @@ public interface IWorldMap {
 
     void eatGrass(Vector2d position);
 
-    Object objectAt(Vector2d position);
+    Optional<Object> objectAt(Vector2d position);
 
     Map<Vector2d, Animal> getAnimals();
 }

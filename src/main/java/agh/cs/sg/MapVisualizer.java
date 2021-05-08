@@ -1,12 +1,14 @@
 package agh.cs.sg;
 
+import java.util.Optional;
+
 public class MapVisualizer {
     private static final String EMPTY_CELL = " ";
     private static final String FRAME_SEGMENT = "-";
     private static final String CELL_SEGMENT = "|";
-    private IWorldMap map;
+    private World map;
 
-    public MapVisualizer(IWorldMap map) {
+    public MapVisualizer(World map) {
         this.map = map;
     }
 
@@ -51,17 +53,15 @@ public class MapVisualizer {
     }
 
     private String drawObject(Vector2d currentPosition) {
-        String result = null;
         if (map.isOccupied(currentPosition)) {
-            Object object = map.objectAt(currentPosition);
-            if (object != null) {
-                result = object.toString();
+            Optional<Object> object = map.objectAt(currentPosition);
+            if (object.isPresent()) {
+                return object.get().toString();
             } else {
-                result = EMPTY_CELL;
+                return EMPTY_CELL;
             }
         } else {
-            result = EMPTY_CELL;
+            return EMPTY_CELL;
         }
-        return result;
     }
 }

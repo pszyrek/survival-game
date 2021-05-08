@@ -1,5 +1,5 @@
 package agh.cs.sg;
 
 public interface IPositionChangeObserver {
-   void positionChanged(Vector2d oldPosition, Vector2d newPosition);
+    Vector2d positionChange(Animal animal, Vector2d position);
 }

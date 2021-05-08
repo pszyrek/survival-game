@@ -54,9 +54,9 @@ public class MapVisualizer {
 
     private String drawObject(Vector2d currentPosition) {
         if (map.isOccupied(currentPosition)) {
-            Optional<Object> object = map.objectAt(currentPosition);
-            if (object.isPresent()) {
-                return object.get().toString();
+            Object object = map.objectAt(currentPosition);
+            if (object != null) {
+                return object.toString();
             } else {
                 return EMPTY_CELL;
             }

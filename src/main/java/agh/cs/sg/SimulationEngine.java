@@ -7,7 +7,7 @@ public class SimulationEngine implements IEngine {
 
     SimulationEngine(World map, List<Vector2d> animalsVectorList) {
         animalsVectorList.forEach(animalVector -> {
-            Animal animal = new Animal(map, animalVector);
+            Animal animal = new Animal(animalVector, map);
             map.place(animal);
         });
 
@@ -17,11 +17,13 @@ public class SimulationEngine implements IEngine {
     public void run(List<Integer> moveDirections) {
         for(Integer moveDirection : moveDirections) {
             for(Field field : map.values()) {
-                Optional<MapElement> object = field.getAnimal();
-                if (object.isPresent()) {
-                    Animal animal = (Animal) object.get();
-                    animal.move(moveDirection);
+                if(field.isAnimalExists()){
+                    List<Animal> animals = field.getAnimals();
+                    for(Animal animal : animals) {
+                        animal.move(moveDirection);
+                    }
                 }
+
             }
         }
     }

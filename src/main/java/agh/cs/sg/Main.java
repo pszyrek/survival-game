@@ -9,7 +9,7 @@ public class Main {
 
         List<Integer> directions = new OptionsParser().parse(args);
         World world = new World();
-        List<Vector2d> positions = Arrays.asList(new Vector2d(2,2), new Vector2d(2,4));
+        List<Vector2d> positions = Arrays.asList(new Vector2d(2,2));
         IEngine engine = new SimulationEngine(world, positions);
         engine.run(directions);
 

@@ -4,7 +4,6 @@ import agh.cs.sg.grass.Grass;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Field {
     private final List<MapElement> elements = new ArrayList<>();
@@ -13,14 +12,27 @@ public class Field {
         elements.add(element);
     }
 
-    public Optional<MapElement> getAnimal() {
+    public void addElement(MapElement mapElement) {
+        this.elements.add(mapElement);
+    }
+
+    public void removeElement(MapElement mapElement) {
+        this.elements.remove(mapElement);
+    }
+
+    public List<MapElement> getElements() {
+        return this.elements;
+    }
+
+    public List<Animal> getAnimals() {
+        List<Animal> animals = new ArrayList<>();
         for(MapElement mapElement : elements) {
             if(mapElement instanceof Animal) {
-                return Optional.of(mapElement);
+                animals.add((Animal) mapElement);
             }
         }
 
-        return Optional.empty();
+        return animals;
     }
 
     public boolean isGrassExists() {

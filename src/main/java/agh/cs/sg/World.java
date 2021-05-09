@@ -3,7 +3,6 @@ package agh.cs.sg;
 import agh.cs.sg.grass.Grass;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 

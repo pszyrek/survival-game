@@ -25,12 +25,13 @@ public enum MapDirection {
         return direction;
     }
 
-    public MapDirection changeDirection(Integer rotateLevel) {
+    public MapDirection changeDirection(Integer rotateLevel, MapDirection mapDirection) {
+        MapDirection direction = mapDirection;
         for(int i = 0; i < rotateLevel;  i++) {
-            return next();
+            direction = direction.next();
         }
 
-        return null;
+        return direction;
     }
 
     private MapDirection next() {

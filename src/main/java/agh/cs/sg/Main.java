@@ -24,8 +24,7 @@ public class Main {
 
         for(Field field : world.getMap().values()) {
             for(Animal animal : field.getAnimals()) {
-                System.out.println(animal.getEnergy());
-                System.out.println(animal.getPosition());
+                System.out.println("Animal " + animal.getPosition() + " have " + animal.getEnergy() + " energy.");
             }
 
             if(field.isGrassExists()) {
@@ -33,7 +32,7 @@ public class Main {
             }
         }
 
-        System.out.println(grassCount);
+        System.out.println("It's " + grassCount + " Grass left.");
 
         System.out.println("Program is stopping..");
     }

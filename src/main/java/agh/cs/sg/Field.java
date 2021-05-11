@@ -35,6 +35,16 @@ public class Field {
         return animals;
     }
 
+    public Grass getGrass() {
+        for(MapElement mapElement : elements) {
+            if(mapElement instanceof Grass) {
+                return (Grass) mapElement;
+            }
+        }
+
+        return null;
+    }
+
     public boolean isGrassExists() {
         return elements.stream().anyMatch(mapElement -> mapElement instanceof Grass);
     }

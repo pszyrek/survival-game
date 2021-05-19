@@ -10,16 +10,23 @@ public class Animal extends MapElement implements IMapElement {
     private List<Integer> genes;
     private Map<Integer, Integer> calculatedGenesProbabilities;
 
-    private int MAP_DIRECTION = 0;
-
     private IPositionChangeObserver observer = null;
 
     public Animal(Vector2d initialPosition, IPositionChangeObserver observer) {
         this.pos = initialPosition;
-        this.energy = 0;
+        this.energy = 20;
         this.observer = observer;
 
         this.genes = generateGenes();
+        this.calculatedGenesProbabilities = calculateGenesProbabilities(this.genes);
+    }
+
+    public Animal(Vector2d initialPosition, IPositionChangeObserver observer, List<Integer> genes, int energy) {
+        this.pos = initialPosition;
+        this.energy = energy;
+        this.observer = observer;
+
+        this.genes = genes;
         this.calculatedGenesProbabilities = calculateGenesProbabilities(this.genes);
     }
 
@@ -38,6 +45,35 @@ public class Animal extends MapElement implements IMapElement {
         Collections.sort(generatedGenes);
 
         return generatedGenes;
+    }
+
+    private List<Integer> completeGenes(Map<Integer, Integer> occurrencesOfGenes) {
+        List<Integer> neededGenes = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7));
+        List<Integer> genes = new ArrayList<>();
+
+        for (int neededGene : neededGenes) {
+            if(!occurrencesOfGenes.containsKey(neededGene)) {
+                int highestOccurrenceGene = 0;
+                int highestOccurrence = 0;
+
+                for(int gene : occurrencesOfGenes.keySet()) {
+                    if(occurrencesOfGenes.get(gene) > highestOccurrence) {
+                        highestOccurrenceGene = gene;
+                    }
+                }
+
+                occurrencesOfGenes.put(highestOccurrenceGene, occurrencesOfGenes.get(highestOccurrenceGene) - 1);
+                occurrencesOfGenes.put(neededGene, 1);
+            }
+        }
+
+        for(int gene : occurrencesOfGenes.keySet()) {
+            for(int i = 0; i < occurrencesOfGenes.get(gene); i++) {
+                genes.add(gene);
+            }
+        }
+
+        return genes;
     }
 
     private Map<Integer, Integer> calculateGenesProbabilities(List<Integer> genes) {
@@ -71,11 +107,7 @@ public class Animal extends MapElement implements IMapElement {
             }
         }
 
-        System.out.println(probabilities);
-
         Integer probabilityMove = probabilities.get(rand.nextInt(probabilities.size()));
-
-        System.out.println(probabilityMove);
 
         return probabilityMove;
     }
@@ -86,6 +118,23 @@ public class Animal extends MapElement implements IMapElement {
 
     public void addEnergy(int energyLevel) {
         this.energy += energyLevel;
+    }
+
+    public void decreaseEnergyForMove() {
+        this.energy -= 1;
+    }
+
+    public int decreaseEnergyForReproduce() {
+        int decreasingEnergy = (this.energy / 4);
+        this.energy -= this.energy - decreasingEnergy;
+
+        return decreasingEnergy ;
+    }
+
+    private int getParentsEnergy(Animal animalParent) {
+        int parentsEnergy = this.decreaseEnergyForReproduce() + animalParent.decreaseEnergyForReproduce();
+
+        return parentsEnergy;
     }
 
     public MapDirection getOrientation() {
@@ -99,19 +148,75 @@ public class Animal extends MapElement implements IMapElement {
     public void move() {
         int move = generateMove();
 
-        if(move > 0) {
-            this.orientation = orientation.changeDirection(move, this.orientation);
-            return;
-        }
+        if(this.energy > 0) {
+            if(move > 0) {
+                this.orientation = orientation.changeDirection(move, this.orientation);
+                return;
+            }
 
-        if(this.observer != null) {
-            Vector2d newPosition = observer.positionChange(this, this.pos);
-            this.pos = newPosition;
+            if(this.observer != null) {
+                Vector2d newPosition = observer.positionChange(this, this.pos);
+                this.pos = newPosition;
+            }
+
+            this.decreaseEnergyForMove();
+        } else {
+            if(this.observer != null) {
+                this.observer.removePosition(this, this.pos);
+            }
         }
     }
 
+    private List<Integer> rewriteGenesFromParents(int splitingIndex, List<Integer> animalParentGenes) {
+        Map<Integer, Integer> occurenciesOfGenes = new HashMap<>();
+
+        for(int i = 0; i < splitingIndex; i++) {
+            int number = this.genes.get(i);
+            if(occurenciesOfGenes.containsKey(number)) {
+                occurenciesOfGenes.put(number, occurenciesOfGenes.get(number) + 1);
+            } else {
+                occurenciesOfGenes.put(number, 1);
+            }
+        }
+
+        for(int i = splitingIndex; i < 32; i++) {
+            int number = animalParentGenes.get(i);
+            if(occurenciesOfGenes.containsKey(number)) {
+                occurenciesOfGenes.put(number, occurenciesOfGenes.get(number) + 1);
+            } else {
+                occurenciesOfGenes.put(number, 1);
+            }
+        }
+
+        return completeGenes(occurenciesOfGenes);
+    }
+
+    public List<Integer> generateGenesFromParents(Animal animalParent) {
+        int randIndex1 = rand.nextInt(31);
+        int randIndex2 = rand.nextInt(31);
+
+        while(randIndex1 == randIndex2) {
+            randIndex2 = rand.nextInt(31);
+        }
+
+        if(randIndex1 < randIndex2) {
+            return rewriteGenesFromParents(randIndex2, animalParent.genes);
+        }
+
+        return rewriteGenesFromParents(randIndex1, animalParent.genes);
+    }
+
+    public Animal reproduce(Animal animalParent, IPositionChangeObserver world, Vector2d position) {
+        int childAnimalEnergy = this.getParentsEnergy(animalParent);
+        Animal childAnimal = new Animal(position, world, generateGenesFromParents(animalParent), childAnimalEnergy);
+
+        System.out.println(childAnimal.getEnergy());
+
+        return childAnimal;
+    }
+
     public void eatGrass() {
-        addEnergy(1);
+        addEnergy(4);
     }
 
     @Override

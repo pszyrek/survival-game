@@ -12,11 +12,10 @@ public class Main {
         IEngine engine = new SimulationEngine(world, positions);
 
         int i = 0;
-        while(i < 1000) {
+        while(i < 100) {
             engine.run();
             i++;
         }
-
 
         System.out.println(world.toString());
 

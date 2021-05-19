@@ -2,12 +2,13 @@ package agh.cs.sg;
 
 import agh.cs.sg.grass.Grass;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class World implements IPositionChangeObserver {
-    static final int GRASS_SIZE = 40;
+    static final int GRASS_SIZE = 80;
     static final int MAX_Y = 20;
     static final int MAX_X = 20;
 
@@ -52,6 +53,15 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
 
                     if(field.isAnimalExists()) {
                         field.addElement(animal);
+                        List<Animal> strongestParents = field.getStrongestParents();
+
+                        int minEnergyValueForReproduce = 4;
+
+                        if(strongestParents.get(0).getEnergy() > minEnergyValueForReproduce && strongestParents.get(1).getEnergy() > minEnergyValueForReproduce) {
+                            Animal childAnimal = strongestParents.get(0).reproduce(strongestParents.get(1), this, demandPosition);
+                            field.addElement(childAnimal);
+                        }
+
                     } else {
                         if(field.isGrassExists()) {
                             animal.eatGrass();
@@ -68,6 +78,15 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
         }
 
         return position;
+    }
+
+    public void removePosition(Animal animal, Vector2d position) {
+        Object objectOnCurrentPosition = objectAt(position);
+        if(objectOnCurrentPosition != null && objectOnCurrentPosition instanceof Field) {
+            Field field = (Field) objectOnCurrentPosition;
+
+            field.removeElement(animal);
+        }
     }
 
     public Map<Vector2d, Field> getMap() {

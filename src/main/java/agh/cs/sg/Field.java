@@ -3,6 +3,8 @@ package agh.cs.sg;
 import agh.cs.sg.grass.Grass;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Field {
@@ -43,6 +45,14 @@ public class Field {
         }
 
         return null;
+    }
+
+    public ArrayList<Animal> getStrongestParents() {
+        List<Animal> animals = getAnimals();
+
+        Collections.sort(animals, new AnimalsComparator());
+
+        return new ArrayList<Animal>(Arrays.asList(animals.get(animals.size() - 1), animals.get(animals.size() - 2)));
     }
 
     public boolean isGrassExists() {

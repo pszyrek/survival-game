@@ -1,10 +1,12 @@
 package agh.cs.sg;
 
 import agh.cs.sg.grass.Grass;
+import agh.cs.sg.grass.GrassType;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class World implements IPositionChangeObserver {
@@ -14,19 +16,22 @@ public class World implements IPositionChangeObserver {
 
     private final Map<Vector2d, Field> map = new ConcurrentHashMap<>();
 
-    private final Random rand = new Random();
-    private final Vector2d upperRight = new Vector2d(20, 20);
-    private Vector2d lowerLeft = new Vector2d(0, 0);
+    private final Vector2d upperRightMapCorner = new Vector2d(20, 20);
+    private final Vector2d lowerLeftMapCorner = new Vector2d(0, 0);
+
+    private final Vector2d lowerLeftJungleCorner = new Vector2d(8, 8);
+    private final Vector2d upperRightJungleCorner = new Vector2d(12, 12);
 
     public World() {
         int grassElements = 0;
         while(grassElements != GRASS_SIZE) {
+            Random rand = new Random();
             int randX = rand.nextInt(MAX_X);
             int randY = rand.nextInt(MAX_Y);
 
             Vector2d localization = new Vector2d(randX, randY);
             if(!isOccupied(localization)) {
-                map.put(localization, new Field(new Grass()));
+                map.put(localization, new Field(new Grass(isInJungleRange(localization) ? GrassType.JUNGLE  : GrassType.STEPPE)));
                 grassElements++;
             }
         }
@@ -36,7 +41,7 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
     Vector2d demandPosition = position.add(animal.getOrientation().toUnitVector());
         if(isInMapRange(demandPosition)) {
             Object objectOnCurrentPosition = objectAt(position);
-            if(objectOnCurrentPosition != null && objectOnCurrentPosition instanceof Field) {
+            if(objectOnCurrentPosition instanceof Field) {
                 Field field = (Field) objectOnCurrentPosition;
 
                 if((field.getAnimals().size() > 1)) {
@@ -48,12 +53,17 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
 
             if(map.containsKey(demandPosition)) {
                 Object objectOnDemandPosition = objectAt(demandPosition);
-                if (objectOnDemandPosition != null && objectOnDemandPosition instanceof Field) {
+                if (objectOnDemandPosition instanceof Field) {
                     Field field = (Field) objectOnDemandPosition;
 
                     if(field.isAnimalExists()) {
                         field.addElement(animal);
                         List<Animal> strongestParents = field.getStrongestParents();
+
+                        if(field.isGrassExists()) {
+                            strongestParents.get(1).eatGrass(field.getGrass().getEnergy());
+                            field.removeElement(field.getGrass());
+                        }
 
                         int minEnergyValueForReproduce = 4;
 
@@ -61,10 +71,9 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
                             Animal childAnimal = strongestParents.get(0).reproduce(strongestParents.get(1), this, demandPosition);
                             field.addElement(childAnimal);
                         }
-
                     } else {
                         if(field.isGrassExists()) {
-                            animal.eatGrass();
+                            animal.eatGrass(field.getGrass().getEnergy());
                             field.removeElement(field.getGrass());
                         }
                         field.addElement(animal);
@@ -82,7 +91,7 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
 
     public void removePosition(Animal animal, Vector2d position) {
         Object objectOnCurrentPosition = objectAt(position);
-        if(objectOnCurrentPosition != null && objectOnCurrentPosition instanceof Field) {
+        if(objectOnCurrentPosition instanceof Field) {
             Field field = (Field) objectOnCurrentPosition;
 
             field.removeElement(animal);
@@ -102,11 +111,7 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
     }
 
     public boolean isOccupied(Vector2d position) {
-        if(isAnimalOccupied(position) || isGrassOccupied(position)) {
-            return true;
-        }
-
-        return false;
+        return isAnimalOccupied(position) || isGrassOccupied(position);
     }
 
     public Object objectAt(Vector2d position) {
@@ -119,10 +124,35 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
     public void place(Animal animal) {
         if(!isAnimalOccupied(animal.getPosition())) {
             if(isGrassOccupied(animal.getPosition())) {
-                animal.eatGrass();
+                Object objectOnDemandPosition = objectAt(animal.getPosition());
+                if (objectOnDemandPosition instanceof Field) {
+                    Field field = (Field) objectOnDemandPosition;
+
+                    animal.eatGrass(field.getGrass().getEnergy());
+                }
             }
 
             map.put(animal.getPosition(), new Field(animal));
+        }
+    }
+
+    public void placeGrass() {
+        Random rand = new Random();
+        Vector2d localization = new Vector2d(rand.nextInt(MAX_X), rand.nextInt(MAX_Y));
+
+        Grass grass = new Grass(isInJungleRange(localization) ? GrassType.JUNGLE  : GrassType.STEPPE);
+
+        if(!isOccupied(localization)) {
+            map.put(localization, new Field(grass));
+        } else {
+            Object objectOnDemandPosition = objectAt(localization);
+            if (objectOnDemandPosition instanceof Field) {
+                Field field = (Field) objectOnDemandPosition;
+
+                if(!field.isGrassExists()) {
+                    field.addElement(grass);
+                }
+            }
         }
     }
 
@@ -131,15 +161,16 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
     }
 
     public boolean isInMapRange(Vector2d position) {
-        if(position.precedes(upperRight) && position.follows(lowerLeft)){
-            return true;
-        }
-        return false;
+        return position.precedes(upperRightMapCorner) && position.follows(lowerLeftMapCorner);
+    }
+
+    public boolean isInJungleRange(Vector2d position) {
+        return position.precedes(upperRightJungleCorner) && position.follows(lowerLeftJungleCorner);
     }
 
     @Override
     public String toString() {
         MapVisualizer mapVisualizer = new MapVisualizer(this);
-        return mapVisualizer.draw(lowerLeft, upperRight);
+        return mapVisualizer.draw(lowerLeftMapCorner, upperRightMapCorner);
     }
 }

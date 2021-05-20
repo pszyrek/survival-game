@@ -3,18 +3,26 @@ package agh.cs.sg.grass;
 import agh.cs.sg.MapElement;
 
 public class Grass extends MapElement {
-    private GrassType type;
+    private final GrassType type;
+    private final int energy;
 
     public Grass(GrassType type) {
         this.type = type;
+        this.energy = type.getEnergy();
     }
 
     public Grass() {
-        this.type = GrassType.STEPPE;
+        GrassType grassType = GrassType.STEPPE;
+        this.type = grassType;
+        this.energy = grassType.getEnergy();
+    }
+
+    public int getEnergy() {
+        return this.energy;
     }
 
     @Override
     public String toString() {
-        return "*";
+        return this.type == GrassType.JUNGLE ? "J" : "S";
     }
 }

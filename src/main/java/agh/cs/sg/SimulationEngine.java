@@ -3,7 +3,8 @@ package agh.cs.sg;
 import java.util.*;
 
 public class SimulationEngine implements IEngine {
-    private Map<Vector2d, Field> map;
+    private final Map<Vector2d, Field> map;
+    private World world;
 
     SimulationEngine(World map, List<Vector2d> animalsVectorList) {
         animalsVectorList.forEach(animalVector -> {
@@ -12,17 +13,18 @@ public class SimulationEngine implements IEngine {
         });
 
         this.map = map.getMap();
+        this.world = map;
     }
 
     public void run() {
         List<Animal> animals = new ArrayList<>();
 
+        this.world.placeGrass();
+
         for(Field field : map.values()) {
             if(field.isAnimalExists()){
                 List<Animal> fieldAnimals = field.getAnimals();
-                for(Animal animal : fieldAnimals) {
-                    animals.add(animal);
-                }
+                animals.addAll(fieldAnimals);
             }
         }
 

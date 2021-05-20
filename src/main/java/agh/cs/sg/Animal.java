@@ -7,10 +7,10 @@ public class Animal extends MapElement implements IMapElement {
     private MapDirection orientation = MapDirection.NORTH;
     private Vector2d pos;
     private int energy;
-    private List<Integer> genes;
-    private Map<Integer, Integer> calculatedGenesProbabilities;
+    private final List<Integer> genes;
+    private final Map<Integer, Integer> calculatedGenesProbabilities;
 
-    private IPositionChangeObserver observer = null;
+    private final IPositionChangeObserver observer;
 
     public Animal(Vector2d initialPosition, IPositionChangeObserver observer) {
         this.pos = initialPosition;
@@ -107,9 +107,7 @@ public class Animal extends MapElement implements IMapElement {
             }
         }
 
-        Integer probabilityMove = probabilities.get(rand.nextInt(probabilities.size()));
-
-        return probabilityMove;
+        return probabilities.get(rand.nextInt(probabilities.size()));
     }
 
     public int getEnergy() {
@@ -132,9 +130,7 @@ public class Animal extends MapElement implements IMapElement {
     }
 
     private int getParentsEnergy(Animal animalParent) {
-        int parentsEnergy = this.decreaseEnergyForReproduce() + animalParent.decreaseEnergyForReproduce();
-
-        return parentsEnergy;
+        return this.decreaseEnergyForReproduce() + animalParent.decreaseEnergyForReproduce();
     }
 
     public MapDirection getOrientation() {
@@ -155,8 +151,7 @@ public class Animal extends MapElement implements IMapElement {
             }
 
             if(this.observer != null) {
-                Vector2d newPosition = observer.positionChange(this, this.pos);
-                this.pos = newPosition;
+                this.pos = observer.positionChange(this, this.pos);
             }
 
             this.decreaseEnergyForMove();
@@ -215,8 +210,8 @@ public class Animal extends MapElement implements IMapElement {
         return childAnimal;
     }
 
-    public void eatGrass() {
-        addEnergy(4);
+    public void eatGrass(int energy) {
+        addEnergy(energy);
     }
 
     @Override

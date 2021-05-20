@@ -16,33 +16,19 @@ public class Vector2d {
     }
 
     public boolean precedes(Vector2d other) {
-        if (this.x <= other.x && this.y <= other.y) {
-            return true;
-        }
-        return false;
+        return this.x <= other.x && this.y <= other.y;
     }
 
     public boolean follows(Vector2d other) {
-        if (this.x >= other.x && this.y >= other.y) {
-            return true;
-        }
-        return false;
+        return this.x >= other.x && this.y >= other.y;
     }
 
     public Vector2d upperRight(Vector2d other) {
         int x, y;
 
-        if(this.x >= other.x) {
-            x = this.x;
-        } else {
-            x = other.x;
-        }
+        x = Math.max(this.x, other.x);
 
-        if(this.y >= other.y) {
-            y = this.y;
-        } else {
-            y = other.y;
-        }
+        y = Math.max(this.y, other.y);
 
         return new Vector2d(x, y);
     }
@@ -50,17 +36,9 @@ public class Vector2d {
     public Vector2d lowerRight(Vector2d other) {
         int x, y;
 
-        if(this.x <= other.x) {
-            x = this.x;
-        } else {
-            x = other.x;
-        }
+        x = Math.min(this.x, other.x);
 
-        if(this.y <= other.y) {
-            y = this.y;
-        } else {
-            y = other.y;
-        }
+        y = Math.min(this.y, other.y);
 
         return new Vector2d(x, y);
     }
@@ -83,11 +61,7 @@ public class Vector2d {
 
         Vector2d that = (Vector2d) other;
 
-        if(this.x == that.x && this.y == that.y) {
-            return true;
-        }
-
-        return false;
+        return this.x == that.x && this.y == that.y;
     }
 
     public Vector2d opposite() {

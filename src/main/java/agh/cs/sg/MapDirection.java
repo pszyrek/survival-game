@@ -11,7 +11,7 @@ public enum MapDirection {
     NORTHWEST;
 
     public String toString(){
-        String direction = switch(this) {
+        return switch(this) {
             case NORTH -> "↑";
             case NORTHEAST -> "↗";
             case EAST -> "→";
@@ -21,8 +21,6 @@ public enum MapDirection {
             case WEST -> "←";
             case NORTHWEST -> "↖";
         };
-
-        return direction;
     }
 
     public MapDirection changeDirection(Integer rotateLevel, MapDirection mapDirection) {
@@ -35,7 +33,7 @@ public enum MapDirection {
     }
 
     private MapDirection next() {
-        MapDirection changedDirection = switch(this) {
+        return switch(this) {
             case NORTH -> NORTHEAST;
             case NORTHEAST -> EAST;
             case EAST -> SOUTHEAST;
@@ -45,12 +43,10 @@ public enum MapDirection {
             case WEST -> NORTHWEST;
             case NORTHWEST -> NORTH;
         };
-
-        return changedDirection;
     }
 
     public Vector2d toUnitVector() {
-        Vector2d vector = switch(this) {
+        return switch(this) {
             case NORTH -> new Vector2d(0, 1);
             case NORTHEAST -> new Vector2d(1, 1);
             case EAST -> new Vector2d(1, 0);
@@ -60,7 +56,5 @@ public enum MapDirection {
             case WEST -> new Vector2d(-1, 0);
             case NORTHWEST -> new Vector2d(-1, 1);
         };
-
-        return vector;
     }
 }

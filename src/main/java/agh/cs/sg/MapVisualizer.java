@@ -4,7 +4,7 @@ public class MapVisualizer {
     private static final String EMPTY_CELL = " ";
     private static final String FRAME_SEGMENT = "-";
     private static final String CELL_SEGMENT = "|";
-    private World map;
+    private final World map;
 
     public MapVisualizer(World map) {
         this.map = map;

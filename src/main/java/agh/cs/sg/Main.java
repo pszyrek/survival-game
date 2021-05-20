@@ -8,16 +8,16 @@ public class Main {
         System.out.println("Program is starting..");
 
         World world = new World();
-        List<Vector2d> positions = Arrays.asList(new Vector2d(2,2), new Vector2d(8, 8),  new Vector2d(12, 8), new Vector2d(8, 4));
+        List<Vector2d> positions = Arrays.asList(new Vector2d(2,2), new Vector2d(8, 8),  new Vector2d(12, 8), new Vector2d(8, 4), new Vector2d(10, 4));
         IEngine engine = new SimulationEngine(world, positions);
 
         int i = 0;
-        while(i < 100) {
+        while(i < 1000) {
             engine.run();
             i++;
         }
 
-        System.out.println(world.toString());
+        System.out.println(world);
 
         int grassCount = 0;
 

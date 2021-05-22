@@ -21,6 +21,10 @@ public class Grass extends MapElement {
         return this.energy;
     }
 
+    public GrassType getType() {
+        return this.type;
+    }
+
     @Override
     public String toString() {
         return this.type == GrassType.JUNGLE ? "J" : "S";

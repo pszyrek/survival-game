@@ -10,24 +10,28 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class World implements IPositionChangeObserver {
-    static final int GRASS_SIZE = 80;
-    static final int MAX_Y = 20;
-    static final int MAX_X = 20;
+    static final int GRASS_SIZE = 300;
+    static int width;
+    static int height;
 
     private final Map<Vector2d, Field> map = new ConcurrentHashMap<>();
 
-    private final Vector2d upperRightMapCorner = new Vector2d(20, 20);
+    private final Vector2d upperRightMapCorner;
     private final Vector2d lowerLeftMapCorner = new Vector2d(0, 0);
 
-    private final Vector2d lowerLeftJungleCorner = new Vector2d(8, 8);
-    private final Vector2d upperRightJungleCorner = new Vector2d(12, 12);
+    private final Vector2d lowerLeftJungleCorner = new Vector2d(10, 10);
+    private final Vector2d upperRightJungleCorner = new Vector2d(30, 30);
 
-    public World() {
+    public World(int width, int height) {
+        this.upperRightMapCorner = new Vector2d(width, height);
+        this.width = width;
+        this.height = height;
+
         int grassElements = 0;
         while(grassElements != GRASS_SIZE) {
             Random rand = new Random();
-            int randX = rand.nextInt(MAX_X);
-            int randY = rand.nextInt(MAX_Y);
+            int randX = rand.nextInt(width);
+            int randY = rand.nextInt(height);
 
             Vector2d localization = new Vector2d(randX, randY);
             if(!isOccupied(localization)) {
@@ -138,7 +142,7 @@ public Vector2d positionChange(Animal animal, Vector2d position) {
 
     public void placeGrass() {
         Random rand = new Random();
-        Vector2d localization = new Vector2d(rand.nextInt(MAX_X), rand.nextInt(MAX_Y));
+        Vector2d localization = new Vector2d(rand.nextInt(this.width), rand.nextInt(this.height));
 
         Grass grass = new Grass(isInJungleRange(localization) ? GrassType.JUNGLE  : GrassType.STEPPE);
 

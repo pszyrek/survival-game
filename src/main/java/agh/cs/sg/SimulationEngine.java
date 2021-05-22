@@ -6,11 +6,14 @@ public class SimulationEngine implements IEngine {
     private final Map<Vector2d, Field> map;
     private World world;
 
-    SimulationEngine(World map, List<Vector2d> animalsVectorList) {
-        animalsVectorList.forEach(animalVector -> {
-            Animal animal = new Animal(animalVector, map);
+    SimulationEngine(World map, int width, int height, int numberOfAnimals) {
+        Random rand = new Random();
+        for(int i = 0; i < numberOfAnimals; i++) {
+            int x = rand.nextInt(width);
+            int y = rand.nextInt(height);
+            Animal animal = new Animal(new Vector2d(x, y), map);
             map.place(animal);
-        });
+        }
 
         this.map = map.getMap();
         this.world = map;

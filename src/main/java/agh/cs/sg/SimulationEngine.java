@@ -3,28 +3,31 @@ package agh.cs.sg;
 import java.util.*;
 
 public class SimulationEngine implements IEngine {
-    private final Map<Vector2d, Field> map;
-    private World world;
+    private final World world;
 
-    SimulationEngine(World map, int width, int height, int numberOfAnimals) {
+    SimulationEngine(World world, int width, int height, int numberOfAnimals, int valueOfDecreasingEnergy) {
+        this.world = world;
+
+        this.init(width, height, numberOfAnimals, valueOfDecreasingEnergy);
+    }
+
+    private void init(int width, int height, int numberOfAnimals, int valueOfDecreasingEnergy) {
         Random rand = new Random();
         for(int i = 0; i < numberOfAnimals; i++) {
             int x = rand.nextInt(width);
             int y = rand.nextInt(height);
-            Animal animal = new Animal(new Vector2d(x, y), map);
-            map.place(animal);
+            Animal animal = new Animal(new Vector2d(x, y), world, valueOfDecreasingEnergy);
+            world.place(animal);
         }
-
-        this.map = map.getMap();
-        this.world = map;
     }
 
+    @Override
     public void run() {
         List<Animal> animals = new ArrayList<>();
 
-        this.world.placeGrass();
+        this.world.placeGrassOnRandomPosition();
 
-        for(Field field : map.values()) {
+        for(Field field : world.getMap().values()) {
             if(field.isAnimalExists()){
                 List<Animal> fieldAnimals = field.getAnimals();
                 animals.addAll(fieldAnimals);

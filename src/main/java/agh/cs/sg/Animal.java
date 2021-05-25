@@ -10,24 +10,30 @@ public class Animal extends MapElement implements IMapElement {
     private final List<Integer> genes;
     private final Map<Integer, Integer> calculatedGenesProbabilities;
 
+    private final int VALUE_OF_ENERGY_DECREASING;
+
     private final IPositionChangeObserver observer;
 
-    public Animal(Vector2d initialPosition, IPositionChangeObserver observer) {
+    public Animal(Vector2d initialPosition, IPositionChangeObserver observer, int valueOfDecreasingEnergy) {
         this.pos = initialPosition;
         this.energy = 20;
         this.observer = observer;
 
         this.genes = generateGenes();
         this.calculatedGenesProbabilities = calculateGenesProbabilities(this.genes);
+
+        this.VALUE_OF_ENERGY_DECREASING = valueOfDecreasingEnergy;
     }
 
-    public Animal(Vector2d initialPosition, IPositionChangeObserver observer, List<Integer> genes, int energy) {
+    public Animal(Vector2d initialPosition, IPositionChangeObserver observer, List<Integer> genes, int energy, int valueOfDecreasingEnergy) {
         this.pos = initialPosition;
         this.energy = energy;
         this.observer = observer;
 
         this.genes = genes;
         this.calculatedGenesProbabilities = calculateGenesProbabilities(this.genes);
+
+        this.VALUE_OF_ENERGY_DECREASING = valueOfDecreasingEnergy;
     }
 
     private List<Integer> generateGenes() {
@@ -119,7 +125,7 @@ public class Animal extends MapElement implements IMapElement {
     }
 
     public void decreaseEnergyForMove() {
-        this.energy -= 1;
+        this.energy -= VALUE_OF_ENERGY_DECREASING;
     }
 
     public int decreaseEnergyForReproduce() {
@@ -203,7 +209,7 @@ public class Animal extends MapElement implements IMapElement {
 
     public Animal reproduce(Animal animalParent, IPositionChangeObserver world, Vector2d position) {
         int childAnimalEnergy = this.getParentsEnergy(animalParent);
-        Animal childAnimal = new Animal(position, world, generateGenesFromParents(animalParent), childAnimalEnergy);
+        Animal childAnimal = new Animal(position, world, generateGenesFromParents(animalParent), childAnimalEnergy, this.VALUE_OF_ENERGY_DECREASING);
 
         System.out.println(childAnimal.getEnergy());
 

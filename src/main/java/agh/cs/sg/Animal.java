@@ -211,8 +211,6 @@ public class Animal extends MapElement implements IMapElement {
         int childAnimalEnergy = this.getParentsEnergy(animalParent);
         Animal childAnimal = new Animal(position, world, generateGenesFromParents(animalParent), childAnimalEnergy, this.VALUE_OF_ENERGY_DECREASING);
 
-        System.out.println(childAnimal.getEnergy());
-
         return childAnimal;
     }
 

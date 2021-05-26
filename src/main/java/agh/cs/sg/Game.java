@@ -15,8 +15,10 @@ public class Game implements Runnable {
     private final int fps;
     private final int valueOfDecreasingEnergy;
 
-    private boolean isRunning = false;
-    private Thread thread;
+    private volatile boolean pauseWork = false;
+    private volatile String state = "New";
+    private Thread workerThread;
+    private boolean isRunning = true;
 
     private BufferStrategy bs;
     private Graphics g;
@@ -36,13 +38,17 @@ public class Game implements Runnable {
         this.tileSize = GameConfiguration.tileSize;
 
         this.startNumberOfAnimals = GameConfiguration.startNumberOfAnimals;
-        this.fps = GameConfiguration.fps;
+        this.fps = GameConfiguration.numberOfFps;
 
         this.valueOfDecreasingEnergy = GameConfiguration.valueOfDecreasingEnergy;
     }
 
+    public void exit() {
+        isRunning = false;
+    }
+
     private void init() {
-        this.display = new Display(title, frameWidth, frameHeight);
+        this.display = new Display(title, frameWidth, frameHeight, this);
         this.engine = new SimulationEngine(world, width, height, startNumberOfAnimals, valueOfDecreasingEnergy);
     }
 
@@ -50,10 +56,11 @@ public class Game implements Runnable {
         engine.run();
 
         int grassCount = 0;
+        int animalsCount = 0;
 
         for(Field field : world.getMap().values()) {
             for(Animal animal : field.getAnimals()) {
-                System.out.println("Animal " + animal.getPosition() + " have " + animal.getEnergy() + " energy.");
+                animalsCount += 1;
             }
 
             if(field.isGrassExists()) {
@@ -61,6 +68,7 @@ public class Game implements Runnable {
             }
         }
 
+        System.out.println("It's " + animalsCount + " Animals left.");
         System.out.println("It's " + grassCount + " Grass left.");
     }
 
@@ -116,8 +124,19 @@ public class Game implements Runnable {
         long lastTime = System.nanoTime();
 
         while(isRunning) {
+            while(pauseWork) {
+                setState("Paused");
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ie) {
+                    System.out.println("Huston, we have a problem. : |");
+                }
+            }
+            setState("Running");
+
             now = System.nanoTime();
             delta += (now - lastTime) / timePerTick;
+            lastTime = now;
 
             if(delta >= 1) {
                 tick();
@@ -127,22 +146,24 @@ public class Game implements Runnable {
         }
     }
 
-    public synchronized void start() {
-        if(isRunning)
-            return;
-        isRunning = true;
-        thread = new Thread(this);
-        thread.start();
+    public void pause() {
+        this.pauseWork = true;
     }
 
-    public synchronized void stop() {
-        if(!isRunning)
-            return;
-        isRunning = false;
-        try {
-            thread.join();
-        } catch(InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void resume() {
+        this.pauseWork = false;
+        if (workerThread != null)
+            workerThread.interrupt(); //wakeup if sleeping
+    }
+
+    private void setState(String state) {
+        this.state = state;
+    }
+
+    /** startImmediately = true to begin work right away, false = start Work in paused state, call resume() to do work */
+    public void start(boolean startImmediately) {
+        this.pauseWork = !startImmediately;
+        workerThread = new Thread(this);
+        workerThread.start();
     }
 }

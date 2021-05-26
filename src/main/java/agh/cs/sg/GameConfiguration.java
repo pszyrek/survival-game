@@ -7,17 +7,23 @@ public class GameConfiguration {
     public static int tileSize;
     public static int startNumberOfAnimals;
     public static int valueOfDecreasingEnergy;
-    public static int fps;
+    public static int numberOfFps;
     public static int minEnergyToReproduce;
+    public static int numberOfWorlds;
+    public static int grassSize;
+    public static int grassSizeRespawn;
 
-    public GameConfiguration(String title, int width, int height, int tileSize, int startNumberOfAnimals, int valueOfDecreasingEnergy, int fps, int minEnergyToReproduce) {
+    public GameConfiguration(String title, int width, int height, int tileSize, int startNumberOfAnimals, int valueOfDecreasingEnergy, int numberOfFps, int minEnergyToReproduce, int numberOfWorlds, int grassSize, int  grassSizeRespawn) {
         this.title = title;
         this.width = width;
         this.height = height;
         this.tileSize = tileSize;
         this.startNumberOfAnimals = startNumberOfAnimals;
         this.valueOfDecreasingEnergy = valueOfDecreasingEnergy;
-        this.fps = fps;
+        this.numberOfFps = numberOfFps;
         this.minEnergyToReproduce = minEnergyToReproduce;
+        this.numberOfWorlds = numberOfWorlds;
+        this.grassSize = grassSize;
+        this.grassSizeRespawn = grassSizeRespawn;
     }
 }

@@ -2,10 +2,7 @@ package agh.cs.sg;
 
 public class Launcher {
     public static void main(String[] args) {
-
-        new GameConfiguration("Survival Game", 40, 40, 20, 100, 1, 60, 4);
-
-        Game game = new Game();
-        game.start();
+        new GameConfiguration("Survival Game", 100, 100, 5, 1000, 1, 60, 2, 1,  300,2);
+        new Menu();
     }
 }

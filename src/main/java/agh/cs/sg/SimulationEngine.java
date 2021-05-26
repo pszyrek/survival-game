@@ -25,7 +25,9 @@ public class SimulationEngine implements IEngine {
     public void run() {
         List<Animal> animals = new ArrayList<>();
 
-        this.world.placeGrassOnRandomPosition();
+        for(int i = 0; i < GameConfiguration.grassSizeRespawn; i++) {
+            this.world.placeGrassOnRandomPosition();
+        }
 
         for(Field field : world.getMap().values()) {
             if(field.isAnimalExists()){

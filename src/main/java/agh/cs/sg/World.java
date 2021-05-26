@@ -10,7 +10,7 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class World implements IPositionChangeObserver {
-    static final int GRASS_SIZE = 300;
+    static final int GRASS_SIZE = GameConfiguration.grassSize;
     static int width;
     static int height;
 

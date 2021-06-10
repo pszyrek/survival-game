@@ -1,6 +1,8 @@
 package agh.cs.sg;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class Animal extends MapElement implements IMapElement {
     private final Random rand = new Random();
@@ -9,6 +11,7 @@ public class Animal extends MapElement implements IMapElement {
     private int energy;
     private final List<Integer> genes;
     private final Map<Integer, Integer> calculatedGenesProbabilities;
+    private AnimalColor color = AnimalColor.LIGHTEST;
 
     private final int VALUE_OF_ENERGY_DECREASING;
 
@@ -18,9 +21,10 @@ public class Animal extends MapElement implements IMapElement {
         this.pos = initialPosition;
         this.energy = 20;
         this.observer = observer;
-
         this.genes = generateGenes();
         this.calculatedGenesProbabilities = calculateGenesProbabilities(this.genes);
+
+        this.color = color.colorName(this.energy);
 
         this.VALUE_OF_ENERGY_DECREASING = valueOfDecreasingEnergy;
     }
@@ -32,6 +36,8 @@ public class Animal extends MapElement implements IMapElement {
 
         this.genes = genes;
         this.calculatedGenesProbabilities = calculateGenesProbabilities(this.genes);
+
+        this.color = color.colorName(this.energy);
 
         this.VALUE_OF_ENERGY_DECREASING = valueOfDecreasingEnergy;
     }
@@ -151,6 +157,8 @@ public class Animal extends MapElement implements IMapElement {
         int move = generateMove();
 
         if(this.energy > 0) {
+            this.color = color.colorName(this.energy);
+
             if(move > 0) {
                 this.orientation = orientation.changeDirection(move, this.orientation);
                 return;
@@ -216,6 +224,10 @@ public class Animal extends MapElement implements IMapElement {
 
     public void eatGrass(int energy) {
         addEnergy(energy);
+    }
+
+    public AnimalColor getColor() {
+        return this.color;
     }
 
     @Override

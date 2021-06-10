@@ -3,18 +3,15 @@ package agh.cs.sg;
 import agh.cs.sg.grass.Grass;
 import agh.cs.sg.grass.GrassType;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class World implements IPositionChangeObserver {
-    static final int GRASS_SIZE = GameConfiguration.grassSize;
-    static int width;
-    static int height;
+    private final int GRASS_SIZE = GameConfiguration.grassSize;
+    private final int width;
+    private final int height;
 
-    private final Map<Vector2d, Field> map = new ConcurrentHashMap<>();
+    private final Map<Vector2d, Field> map = new HashMap<>();
 
     private final Vector2d upperRightMapCorner;
     private final Vector2d lowerLeftMapCorner = new Vector2d(0, 0);
@@ -95,6 +92,10 @@ public class World implements IPositionChangeObserver {
 
     public boolean isGrassOccupied(Vector2d position) {
         return map.containsKey(position) && map.get(position).isGrassExists();
+    }
+
+    public Integer numberOfAnimalsInField(Vector2d position) {
+        return findField(position).getAnimals().size();
     }
 
     public boolean isAnimalOccupied(Vector2d position) {

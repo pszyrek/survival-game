@@ -50,6 +50,14 @@ public class Field {
         return new ArrayList<>(Arrays.asList(animals.get(animals.size() - 1), animals.get(animals.size() - 2)));
     }
 
+    public Animal strongestAnimal() {
+        List<Animal> animals = getAnimals();
+
+        animals.sort(new AnimalsComparator());
+
+        return animals.get(animals.size() - 1);
+    }
+
     public boolean isGrassExists() {
         return elements.stream().anyMatch(mapElement -> mapElement instanceof Grass);
     }

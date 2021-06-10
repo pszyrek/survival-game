@@ -6,8 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter; // opisac
+import java.awt.event.WindowEvent; // opisac
 
 public class Display extends JFrame implements ActionListener {
     Game game;
@@ -46,8 +46,8 @@ public class Display extends JFrame implements ActionListener {
         canvas.setMaximumSize(new Dimension(width, height));
         canvas.setMinimumSize(new Dimension(width, height));
 
-        getContentPane().add(canvas);
-        super.setVisible(true);
+        getContentPane().add(canvas); // opisać
+        super.setVisible(true); // opisać
         super.setSize(width, height + menuBar.getHeight());
         super.setResizable(false);
         super.setJMenuBar(menuBar);
@@ -66,7 +66,7 @@ public class Display extends JFrame implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) { // opisać
         if(e.getSource() == pause) {
             game.pause();
         }

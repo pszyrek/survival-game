@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 
 public class Menu implements ActionListener {
     JFrame frame = new JFrame();
-    JPanel panel = new JPanel();;
+    JPanel panel = new JPanel();
     JButton button = new JButton("Run");
     Container widthContainer = createContainer(GameConfiguration.width,  "Width of map");;
     Container heightContainer = createContainer(GameConfiguration.height,  "Height of map");
@@ -17,13 +17,12 @@ public class Menu implements ActionListener {
     Container startNumberOfAnimalsContainer = createContainer(GameConfiguration.startNumberOfAnimals,  "Start number of animals on map");
     Container valueOfDecreasingEnergyContainer = createContainer(GameConfiguration.valueOfDecreasingEnergy,  "Value of decreasing energy of animal");
     Container minEnergyToReproduceContainer = createContainer(GameConfiguration.minEnergyToReproduce,  "Minimal energy to reproduce");
-    Container numberOfFpsContainer = createContainer(GameConfiguration.numberOfFps,  "Number of fps");
     Container numberOfWorlds = createContainer(GameConfiguration.numberOfWorlds,  "Number of worlds");
     Container grassSize = createContainer(GameConfiguration.grassSize,  "Number of grass");
     Container grassSizeRespawn = createContainer(GameConfiguration.grassSizeRespawn,  "Number of grass to respawn");
 
     private Container createContainer(int defaultValue, String labelValue) {
-        Container container = new Container();
+        Container container = new Container(); // Object który może zawierać inne elementy AWT
         container.setLayout(new GridLayout(3, 1));
         JLabel label = new JLabel(labelValue);
 
@@ -68,7 +67,6 @@ public class Menu implements ActionListener {
         panel.add(startNumberOfAnimalsContainer);
         panel.add(valueOfDecreasingEnergyContainer);
         panel.add(minEnergyToReproduceContainer);
-        panel.add(numberOfFpsContainer);
         panel.add(numberOfWorlds);
         panel.add(grassSize);
         panel.add(grassSizeRespawn);
@@ -92,7 +90,6 @@ public class Menu implements ActionListener {
             GameConfiguration.startNumberOfAnimals = getFieldValue(startNumberOfAnimalsContainer);
             GameConfiguration.valueOfDecreasingEnergy = getFieldValue(valueOfDecreasingEnergyContainer);
             GameConfiguration.minEnergyToReproduce = getFieldValue(minEnergyToReproduceContainer);
-            GameConfiguration.numberOfFps = getFieldValue(numberOfFpsContainer);
             GameConfiguration.numberOfWorlds = getFieldValue(numberOfWorlds);
             GameConfiguration.grassSize = getFieldValue(grassSize);
             GameConfiguration.grassSizeRespawn = getFieldValue(grassSizeRespawn);

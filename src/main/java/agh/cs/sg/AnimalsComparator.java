@@ -2,7 +2,7 @@ package agh.cs.sg;
 
 import java.util.Comparator;
 
-public class AnimalsComparator  implements Comparator<Animal> {
+public class AnimalsComparator implements Comparator<Animal> {
 
     @Override
     public int compare(Animal o1, Animal o2) {

@@ -55,7 +55,10 @@ public class Field {
 
         animals.sort(new AnimalsComparator());
 
-        return animals.get(animals.size() - 1);
+        if(animals.size() > 0) {
+            return animals.get(animals.size() - 1);
+        }
+        return null;
     }
 
     public boolean isGrassExists() {
@@ -72,6 +75,10 @@ public class Field {
             return elements.size() + "";
         }
 
-        return elements.get(0).toString();
+        if(elements.size() == 1) {
+            return elements.get(0).toString();
+        }
+
+        return null;
     }
 }

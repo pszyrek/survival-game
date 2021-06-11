@@ -19,6 +19,12 @@ public class World implements IPositionChangeObserver {
     private final Vector2d lowerLeftJungleCorner = new Vector2d(10, 10);
     private final Vector2d upperRightJungleCorner = new Vector2d(30, 30);
 
+    private int era = 0;
+    private int valueOfAnimalsEnergy = 0;
+    private int numberOfAnimals = 0;
+    private int numberOfGrass = 0;
+    private int numberOfChildren = 0;
+
     private final int minEnergyToReproduce;
 
     public World(int width, int height, int minEnergyToReproduce) {
@@ -62,6 +68,7 @@ public class World implements IPositionChangeObserver {
 
                     if (strongestParents.get(0).getEnergy() > minEnergyToReproduce && strongestParents.get(1).getEnergy() > minEnergyToReproduce) {
                         Animal childAnimal = strongestParents.get(0).reproduce(strongestParents.get(1), this, demandPosition);
+                        childAnimal.setNumberOfDescendants(strongestParents.get(0).getNumberOfDescendants() + strongestParents.get(1).getNumberOfDescendants() + 2);
                         fieldOnDemandPosition.addElement(childAnimal);
                     }
                 } else {
@@ -107,7 +114,11 @@ public class World implements IPositionChangeObserver {
     }
 
     public Field findField(Vector2d position) {
-        return map.get(position);
+        if(map.containsKey(position)) {
+            return map.get(position);
+        }
+
+        return null;
     }
 
     public void place(Animal animal) {
@@ -148,5 +159,61 @@ public class World implements IPositionChangeObserver {
 
     public boolean isInJungleRange(Vector2d position) {
         return position.precedes(upperRightJungleCorner) && position.follows(lowerLeftJungleCorner);
+    }
+
+    public void increaseEra() {
+        this.era += 1;
+    }
+
+    public int getEra() {
+        return this.era;
+    }
+
+    public void increaseNumberOfAnimals() {
+        this.numberOfAnimals += 1;
+    }
+
+    public void resetNumberOfAnimals() {
+        this.numberOfAnimals = 0;
+    }
+
+    public int getNumberOfAnimals() {
+        return this.numberOfAnimals;
+    }
+
+    public void increaseValueOfAnimalsEnergy(int energy) {
+        this.valueOfAnimalsEnergy += energy;
+    }
+
+    public void resetValueOfAnimalsEnergy() {
+        this.valueOfAnimalsEnergy = 0;
+    }
+
+    public int getValueOfAnimalsEnergy() {
+        return this.valueOfAnimalsEnergy;
+    }
+
+    public void increaseNumberOfGrass() {
+        this.numberOfGrass += 1;
+    }
+
+    public int getNumberOfGrass() {
+        return this.numberOfGrass;
+    }
+
+    public void resetNumberOfGrass() {
+        this.numberOfGrass = 0;
+    }
+
+    public void increaseNumberOfChildren(int numberOfChildren) {
+        this.numberOfChildren += numberOfChildren;
+    }
+
+    public int getNumberOfChildren() {
+        return this.numberOfChildren;
+    }
+
+    public void resetNumberOfChildren() {
+        this.numberOfChildren = 0;
     }
 }

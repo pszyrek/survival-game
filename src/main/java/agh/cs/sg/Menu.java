@@ -20,6 +20,8 @@ public class Menu implements ActionListener {
     Container numberOfWorlds = createContainer(GameConfiguration.numberOfWorlds,  "Number of worlds");
     Container grassSize = createContainer(GameConfiguration.grassSize,  "Number of grass");
     Container grassSizeRespawn = createContainer(GameConfiguration.grassSizeRespawn,  "Number of grass to respawn");
+    Container delay = createContainer(GameConfiguration.delay,  "Delay (in milliseconds)");
+    Container initialValueOfAnimalEnergy = createContainer(GameConfiguration.initialValueOfAnimalEnergy,  "InitialValue of Animal energy");
 
     private Container createContainer(int defaultValue, String labelValue) {
         Container container = new Container(); // Object który może zawierać inne elementy AWT
@@ -70,6 +72,8 @@ public class Menu implements ActionListener {
         panel.add(numberOfWorlds);
         panel.add(grassSize);
         panel.add(grassSizeRespawn);
+        panel.add(delay);
+        panel.add(initialValueOfAnimalEnergy);
 
         button.addActionListener(this);
         panel.add(button);
@@ -93,6 +97,8 @@ public class Menu implements ActionListener {
             GameConfiguration.numberOfWorlds = getFieldValue(numberOfWorlds);
             GameConfiguration.grassSize = getFieldValue(grassSize);
             GameConfiguration.grassSizeRespawn = getFieldValue(grassSizeRespawn);
+            GameConfiguration.delay = getFieldValue(delay);
+            GameConfiguration.initialValueOfAnimalEnergy = getFieldValue(initialValueOfAnimalEnergy);
 
             for(int i = 0; i < GameConfiguration.numberOfWorlds; i++) {
                 Game game = new Game();

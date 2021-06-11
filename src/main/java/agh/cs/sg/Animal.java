@@ -1,6 +1,5 @@
 package agh.cs.sg;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -12,24 +11,29 @@ public class Animal extends MapElement implements IMapElement {
     private final List<Integer> genes;
     private final Map<Integer, Integer> calculatedGenesProbabilities;
     private AnimalColor color = AnimalColor.LIGHTEST;
+    private int numberOfChildren = 0;
+    private int numberOfDescendants = 0;
+    private int dominantGene;
 
-    private final int VALUE_OF_ENERGY_DECREASING;
+    private boolean isMarked = false;
 
-    private final IPositionChangeObserver observer;
+    private final int VALUE_OF_ENERGY_DECREASING = GameConfiguration.valueOfDecreasingEnergy;
 
-    public Animal(Vector2d initialPosition, IPositionChangeObserver observer, int valueOfDecreasingEnergy) {
+    private final World observer;
+
+    public Animal(Vector2d initialPosition, World observer) {
         this.pos = initialPosition;
-        this.energy = 20;
+        this.energy = GameConfiguration.initialValueOfAnimalEnergy;
         this.observer = observer;
         this.genes = generateGenes();
         this.calculatedGenesProbabilities = calculateGenesProbabilities(this.genes);
 
-        this.color = color.colorName(this.energy);
+        setDominantGene();
 
-        this.VALUE_OF_ENERGY_DECREASING = valueOfDecreasingEnergy;
+        this.color = color.colorName(this.energy);
     }
 
-    public Animal(Vector2d initialPosition, IPositionChangeObserver observer, List<Integer> genes, int energy, int valueOfDecreasingEnergy) {
+    public Animal(Vector2d initialPosition, World observer, List<Integer> genes, int energy) {
         this.pos = initialPosition;
         this.energy = energy;
         this.observer = observer;
@@ -37,9 +41,23 @@ public class Animal extends MapElement implements IMapElement {
         this.genes = genes;
         this.calculatedGenesProbabilities = calculateGenesProbabilities(this.genes);
 
-        this.color = color.colorName(this.energy);
+        setDominantGene();
 
-        this.VALUE_OF_ENERGY_DECREASING = valueOfDecreasingEnergy;
+        this.color = color.colorName(this.energy);
+    }
+
+    private void setDominantGene() {
+        int maxValue = Collections.max(this.calculatedGenesProbabilities.values());
+
+        for(Integer key : this.calculatedGenesProbabilities.keySet()) {
+            if(this.calculatedGenesProbabilities.get(key) == maxValue) {
+                this.dominantGene = key;
+            }
+        }
+    }
+
+    private int getDominantGene() {
+        return this.dominantGene;
     }
 
     private List<Integer> generateGenes() {
@@ -138,7 +156,7 @@ public class Animal extends MapElement implements IMapElement {
         int decreasingEnergy = (this.energy / 4);
         this.energy -= this.energy - decreasingEnergy;
 
-        return decreasingEnergy ;
+        return decreasingEnergy;
     }
 
     private int getParentsEnergy(Animal animalParent) {
@@ -215,9 +233,11 @@ public class Animal extends MapElement implements IMapElement {
         return rewriteGenesFromParents(randIndex1, animalParent.genes);
     }
 
-    public Animal reproduce(Animal animalParent, IPositionChangeObserver world, Vector2d position) {
+    public Animal reproduce(Animal animalParent, World world, Vector2d position) {
+        this.numberOfChildren += 1;
+        animalParent.increaseNumberOfChildren();
         int childAnimalEnergy = this.getParentsEnergy(animalParent);
-        Animal childAnimal = new Animal(position, world, generateGenesFromParents(animalParent), childAnimalEnergy, this.VALUE_OF_ENERGY_DECREASING);
+        Animal childAnimal = new Animal(position, world, generateGenesFromParents(animalParent), childAnimalEnergy);
 
         return childAnimal;
     }
@@ -228,6 +248,36 @@ public class Animal extends MapElement implements IMapElement {
 
     public AnimalColor getColor() {
         return this.color;
+    }
+
+    public List<Integer> getGenes() { return this.genes; }
+
+    public void increaseNumberOfChildren() {
+        this.numberOfChildren += 1;
+    }
+
+    public int getNumberOfChildren() {
+        return this.numberOfChildren;
+    }
+
+    public void setNumberOfDescendants(int numberOfDescendants) {
+        this.numberOfDescendants += numberOfDescendants;
+    }
+
+    public int getNumberOfDescendants() {
+        return this.numberOfDescendants;
+    }
+
+    public boolean isMarked() {
+        return this.isMarked;
+    }
+
+    public void mark() {
+        this.isMarked = true;
+    }
+
+    public void unmark() {
+        this.isMarked = false;
     }
 
     @Override

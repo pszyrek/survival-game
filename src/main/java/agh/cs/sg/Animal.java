@@ -253,9 +253,8 @@ public class Animal extends MapElement implements IMapElement {
         this.numberOfChildren += 1;
         animalParent.increaseNumberOfChildren();
         int childAnimalEnergy = this.getParentsEnergy(animalParent);
-        Animal childAnimal = new Animal(position, world, generateGenesFromParents(animalParent), childAnimalEnergy);
 
-        return childAnimal;
+        return new Animal(position, world, generateGenesFromParents(animalParent), childAnimalEnergy);
     }
 
     public void eatGrass(int energy) {

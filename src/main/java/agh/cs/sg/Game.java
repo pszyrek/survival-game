@@ -9,7 +9,6 @@ public class Game implements Runnable {
     public int width, height;
 
     private volatile boolean pauseWork = false;
-    private Thread workerThread;
     private boolean isRunning = true;
 
     public World world;
@@ -46,7 +45,7 @@ public class Game implements Runnable {
         init();
 
         while(isRunning) {
-            while(pauseWork);
+            while (pauseWork) Thread.onSpinWait();
             try {
                 TimeUnit.MILLISECONDS.sleep(GameConfiguration.delay);
             } catch (InterruptedException e) {
@@ -70,7 +69,7 @@ public class Game implements Runnable {
 
     public void start(boolean startImmediately) {
         this.pauseWork = !startImmediately;
-        workerThread = new Thread(this);
+        Thread workerThread = new Thread(this);
         workerThread.start();
     }
 }

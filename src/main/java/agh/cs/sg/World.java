@@ -4,15 +4,13 @@ import agh.cs.sg.grass.Grass;
 import agh.cs.sg.grass.GrassType;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class World implements IPositionChangeObserver {
-    private final int GRASS_SIZE = GameConfiguration.grassSize;
     private final int width;
     private final int height;
 
     private final Map<Vector2d, Field> map = new HashMap<>();
-    private List deadAnimalsList = new ArrayList();
+    private final List<Animal> deadAnimalsList = new ArrayList<>();
 
     private final Vector2d upperRightMapCorner;
     private final Vector2d lowerLeftMapCorner = new Vector2d(0, 0);
@@ -29,7 +27,7 @@ public class World implements IPositionChangeObserver {
 
     private final int minEnergyToReproduce;
 
-    private Map<Integer, Integer> dominantGenesCounter = new HashMap<>(8);
+    private final Map<Integer, Integer> dominantGenesCounter = new HashMap<>(8);
 
     public World(int width, int height, int minEnergyToReproduce) {
         this.upperRightMapCorner = new Vector2d(width, height);
@@ -41,6 +39,7 @@ public class World implements IPositionChangeObserver {
         setJungle();
 
         int grassElements = 0;
+        int GRASS_SIZE = GameConfiguration.grassSize;
         while (grassElements != GRASS_SIZE) {
             Random rand = new Random();
             int randX = rand.nextInt(width);
@@ -114,9 +113,7 @@ public class World implements IPositionChangeObserver {
     }
 
     public void resetDominantGeneCounter() {
-        for(int gene : this.dominantGenesCounter.keySet()) {
-            this.dominantGenesCounter.put(gene, 0);
-        }
+        this.dominantGenesCounter.replaceAll((g, v) -> 0);
     }
 
     public void removePosition(Animal animal, Vector2d position) {
@@ -132,10 +129,6 @@ public class World implements IPositionChangeObserver {
 
     public boolean isGrassOccupied(Vector2d position) {
         return map.containsKey(position) && map.get(position).isGrassExists();
-    }
-
-    public Integer numberOfAnimalsInField(Vector2d position) {
-        return findField(position).getAnimals().size();
     }
 
     public boolean isAnimalOccupied(Vector2d position) {

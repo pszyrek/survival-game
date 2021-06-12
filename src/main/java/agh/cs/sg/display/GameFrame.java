@@ -9,16 +9,17 @@ import java.awt.event.*;
 public class GameFrame extends JFrame implements ActionListener {
     Game game;
 
-    private JMenuBar menuBar;
-    private JMenu execute, show;
-    private JMenuItem start, pause, stats;
-    private GamePanel panel;
+    private final JMenuBar menuBar;
+    private final JMenuItem start;
+    private final JMenuItem pause;
+    private final JMenuItem stats;
+    private final GamePanel panel;
     private GameStatsPopup gameStatsPopup;
 
     public boolean isPaused;
 
-    private int width, height;
-    private int tileSize;
+    private final int width;
+    private final int height;
 
     public GameFrame(Game game) {
         super(GameConfiguration.title);
@@ -26,9 +27,9 @@ public class GameFrame extends JFrame implements ActionListener {
 
         this.width = GameConfiguration.width * GameConfiguration.tileSize;
         this.height = GameConfiguration.height * GameConfiguration.tileSize;
-        this.tileSize = GameConfiguration.tileSize;
+        int tileSize = GameConfiguration.tileSize;
 
-        execute = new JMenu("Execute");
+        JMenu execute = new JMenu("Execute");
 
         menuBar = new JMenuBar();
         menuBar.add(execute);
@@ -42,7 +43,7 @@ public class GameFrame extends JFrame implements ActionListener {
         execute.add(pause);
         execute.add(start);
 
-        show = new JMenu("Show");
+        JMenu show = new JMenu("Show");
         menuBar.add(show);
 
         stats = new JMenuItem("Stats");

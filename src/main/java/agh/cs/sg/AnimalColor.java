@@ -1,7 +1,5 @@
 package agh.cs.sg;
 
-import org.w3c.dom.css.RGBColor;
-
 import java.awt.*;
 
 public enum AnimalColor {
@@ -26,28 +24,28 @@ public enum AnimalColor {
     }
 
     public AnimalColor colorName(Integer energy) {
-        if(energy > 20) {
-            return LIGHTER;
-        }
-
-        if(energy > 40) {
-            return LIGHT;
-        }
-
-        if(energy > 80) {
-            return MEDIUM;
-        }
-
-        if(energy > 160) {
-            return DARK;
+        if(energy > 640) {
+            return DARKEST;
         }
 
         if(energy > 320) {
             return DARKER;
         }
 
-        if(energy > 640) {
-            return DARKEST;
+        if(energy > 160) {
+            return DARK;
+        }
+
+        if(energy > 80) {
+            return MEDIUM;
+        }
+
+        if(energy > 40) {
+            return LIGHT;
+        }
+
+        if(energy > 20) {
+            return LIGHTER;
         }
 
         return LIGHTEST;

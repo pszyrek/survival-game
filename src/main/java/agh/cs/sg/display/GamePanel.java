@@ -8,11 +8,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class GamePanel extends JPanel implements MouseListener {
-    private int width;
-    private int height;
-    private int tileSize;
-    private World world;
-    private GameFrame frame;
+    private final int width;
+    private final int height;
+    private final int tileSize;
+    private final World world;
+    private final GameFrame frame;
     private AnimalStatsPopup animalStatsPopup = null;
     private Animal animal;
 
@@ -42,31 +42,28 @@ public class GamePanel extends JPanel implements MouseListener {
                 if(!world.isOccupied(position)) {
                     if(world.isInJungleRange(position)) {
                         g.setColor(new Color(81,149,72));
-                        g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
                     } else  {
                         g.setColor(new Color(160,197,95));
-                        g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
                     }
+                    g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
                 } else if(world.isAnimalOccupied(position)) {
                     Field field = world.findField(position);
                     Animal strongestAnimal = field.strongestAnimal();
 
                     if(strongestAnimal.isMarked()) {
                         g.setColor(new Color(0, 0,0));
-                        g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
                     } else {
                         g.setColor(strongestAnimal.getColor().colorNameToRgb());
-                        g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
                     }
+                    g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
 
 
                     if (strongestAnimal.isDominantMarked()) {
                         g.setColor(new Color(0, 35, 196));
-                        g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
                     } else {
                         g.setColor(strongestAnimal.getColor().colorNameToRgb());
-                        g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
                     }
+                    g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
                 } else {
                     if(world.isGrassOccupied(position)) {
                         g.setColor(new Color(190,242,2));

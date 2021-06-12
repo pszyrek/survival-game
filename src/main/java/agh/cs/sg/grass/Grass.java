@@ -11,18 +11,8 @@ public class Grass extends MapElement {
         this.energy = type.getEnergy();
     }
 
-    public Grass() {
-        GrassType grassType = GrassType.STEPPE;
-        this.type = grassType;
-        this.energy = grassType.getEnergy();
-    }
-
     public int getEnergy() {
         return this.energy;
-    }
-
-    public GrassType getType() {
-        return this.type;
     }
 
     @Override

@@ -59,7 +59,7 @@ public class Menu implements ActionListener {
 
     private int getFieldValue(Container container) {
         JTextField jTextField = (JTextField) container.getComponent(1);
-        return Integer.valueOf(jTextField.getText());
+        return Integer.parseInt(jTextField.getText());
     }
 
     public Menu() {

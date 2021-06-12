@@ -12,20 +12,24 @@ public class World implements IPositionChangeObserver {
     private final int height;
 
     private final Map<Vector2d, Field> map = new HashMap<>();
+    private List deadAnimalsList = new ArrayList();
 
     private final Vector2d upperRightMapCorner;
     private final Vector2d lowerLeftMapCorner = new Vector2d(0, 0);
 
-    private final Vector2d lowerLeftJungleCorner = new Vector2d(10, 10);
-    private final Vector2d upperRightJungleCorner = new Vector2d(30, 30);
+    private Vector2d lowerLeftJungleCorner;
+    private Vector2d upperRightJungleCorner;
 
     private int era = 0;
     private int valueOfAnimalsEnergy = 0;
     private int numberOfAnimals = 0;
     private int numberOfGrass = 0;
     private int numberOfChildren = 0;
+    private int lifeTimeForDeadAnimals = 0;
 
     private final int minEnergyToReproduce;
+
+    private Map<Integer, Integer> dominantGenesCounter = new HashMap<>(8);
 
     public World(int width, int height, int minEnergyToReproduce) {
         this.upperRightMapCorner = new Vector2d(width, height);
@@ -33,6 +37,8 @@ public class World implements IPositionChangeObserver {
         this.height = height;
 
         this.minEnergyToReproduce = minEnergyToReproduce;
+
+        setJungle();
 
         int grassElements = 0;
         while (grassElements != GRASS_SIZE) {
@@ -67,9 +73,16 @@ public class World implements IPositionChangeObserver {
                     }
 
                     if (strongestParents.get(0).getEnergy() > minEnergyToReproduce && strongestParents.get(1).getEnergy() > minEnergyToReproduce) {
-                        Animal childAnimal = strongestParents.get(0).reproduce(strongestParents.get(1), this, demandPosition);
+                        Vector2d randomNextToPosition = demandPosition.getRandomNextToPosition();
+                        Animal childAnimal = strongestParents.get(0).reproduce(strongestParents.get(1), this, randomNextToPosition);
                         childAnimal.setNumberOfDescendants(strongestParents.get(0).getNumberOfDescendants() + strongestParents.get(1).getNumberOfDescendants() + 2);
-                        fieldOnDemandPosition.addElement(childAnimal);
+
+                        if(map.containsKey(randomNextToPosition)) {
+                            Field fieldForRandomNextToPosition = findField(randomNextToPosition);
+                            fieldForRandomNextToPosition.addElement(childAnimal);
+                        } else {
+                            this.place(childAnimal);
+                        }
                     }
                 } else {
                     if (fieldOnDemandPosition.isGrassExists()) {
@@ -88,7 +101,27 @@ public class World implements IPositionChangeObserver {
         return position;
     }
 
+    public void updateDominantGenes(int dominantGene) {
+        if(this.dominantGenesCounter.containsKey(dominantGene)) {
+            this.dominantGenesCounter.put(dominantGene, this.dominantGenesCounter.get(dominantGene) + 1);
+        } else {
+            this.dominantGenesCounter.put(dominantGene, 1);
+        }
+    }
+
+    public int getDominantGeneNumber(int dominantGene) {
+        return this.dominantGenesCounter.get(dominantGene);
+    }
+
+    public void resetDominantGeneCounter() {
+        for(int gene : this.dominantGenesCounter.keySet()) {
+            this.dominantGenesCounter.put(gene, 0);
+        }
+    }
+
     public void removePosition(Animal animal, Vector2d position) {
+        this.deadAnimalsList.add(animal);
+
         Field field = findField(position);
         field.removeElement(animal);
     }
@@ -143,7 +176,7 @@ public class World implements IPositionChangeObserver {
         } else {
             Field field = findField(position);
 
-            if (!field.isGrassExists()) {
+            if (!field.isGrassExists() && !field.isAnimalExists()) {
                 field.addElement(grass);
             }
         }
@@ -159,6 +192,18 @@ public class World implements IPositionChangeObserver {
 
     public boolean isInJungleRange(Vector2d position) {
         return position.precedes(upperRightJungleCorner) && position.follows(lowerLeftJungleCorner);
+    }
+
+    public void setJungle() {
+        int sizeOfJungle = (int) (this.height * ((float)GameConfiguration.jungleRatio / 100.0));
+        int lowerX = ((this.width / 2) - (sizeOfJungle / 2));
+        int upperX = ((this.width / 2) + (sizeOfJungle / 2));
+
+        int lowerY = ((this.height / 2) - (sizeOfJungle / 2));
+        int upperY = ((this.height / 2) + (sizeOfJungle / 2));
+
+        this.lowerLeftJungleCorner = new Vector2d(lowerX, lowerY);
+        this.upperRightJungleCorner = new Vector2d(upperX, upperY);
     }
 
     public void increaseEra() {
@@ -215,5 +260,21 @@ public class World implements IPositionChangeObserver {
 
     public void resetNumberOfChildren() {
         this.numberOfChildren = 0;
+    }
+
+    public List<Animal> getDeadAnimalsList() {
+        return this.deadAnimalsList;
+    }
+
+    public void increaseLifeTimeForDeadAnimals(int lifeTime) {
+        this.lifeTimeForDeadAnimals += lifeTime;
+    }
+
+    public void resetLifeTimeForDeadAnimals() {
+        this.lifeTimeForDeadAnimals = 0;
+    }
+
+    public int getLifeTimeForDeadAnimals() {
+        return this.lifeTimeForDeadAnimals;
     }
 }

@@ -1,5 +1,7 @@
 package agh.cs.sg;
 
+import java.util.Random;
+
 public enum MapDirection {
     NORTH,
     NORTHEAST,
@@ -21,6 +23,11 @@ public enum MapDirection {
             case WEST -> "←";
             case NORTHWEST -> "↖";
         };
+    }
+
+    public static MapDirection getRandomColor() {
+        Random random = new Random();
+        return values()[random.nextInt(values().length)];
     }
 
     public MapDirection changeDirection(Integer rotateLevel, MapDirection mapDirection) {

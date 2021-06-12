@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Animal extends MapElement implements IMapElement {
     private final Random rand = new Random();
-    private MapDirection orientation = MapDirection.NORTH;
+    private MapDirection orientation = MapDirection.getRandomColor();
     private Vector2d pos;
     private int energy;
     private final List<Integer> genes;
@@ -14,8 +14,11 @@ public class Animal extends MapElement implements IMapElement {
     private int numberOfChildren = 0;
     private int numberOfDescendants = 0;
     private int dominantGene;
+    private boolean isDominantMarked = false;
+    private int lifeTime = 0;
 
     private boolean isMarked = false;
+
 
     private final int VALUE_OF_ENERGY_DECREASING = GameConfiguration.valueOfDecreasingEnergy;
 
@@ -56,8 +59,20 @@ public class Animal extends MapElement implements IMapElement {
         }
     }
 
-    private int getDominantGene() {
+    public int getDominantGene() {
         return this.dominantGene;
+    }
+
+    public void markDominant() {
+        this.isDominantMarked = true;
+    }
+
+    public void unmarkDominant() {
+        this.isDominantMarked = false;
+    }
+
+    public boolean isDominantMarked() {
+        return this.isDominantMarked;
     }
 
     private List<Integer> generateGenes() {
@@ -173,6 +188,7 @@ public class Animal extends MapElement implements IMapElement {
 
     public void move() {
         int move = generateMove();
+        this.lifeTime += 1;
 
         if(this.energy > 0) {
             this.color = color.colorName(this.energy);
@@ -278,6 +294,10 @@ public class Animal extends MapElement implements IMapElement {
 
     public void unmark() {
         this.isMarked = false;
+    }
+
+    public int getLifeTime() {
+        return this.lifeTime;
     }
 
     @Override

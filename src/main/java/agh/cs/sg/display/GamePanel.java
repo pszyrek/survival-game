@@ -58,6 +58,15 @@ public class GamePanel extends JPanel implements MouseListener {
                         g.setColor(strongestAnimal.getColor().colorNameToRgb());
                         g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
                     }
+
+
+                    if (strongestAnimal.isDominantMarked()) {
+                        g.setColor(new Color(0, 35, 196));
+                        g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                    } else {
+                        g.setColor(strongestAnimal.getColor().colorNameToRgb());
+                        g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                    }
                 } else {
                     if(world.isGrassOccupied(position)) {
                         g.setColor(new Color(190,242,2));
@@ -65,9 +74,11 @@ public class GamePanel extends JPanel implements MouseListener {
                     }
                 }
 
-                if(this.xTile == x && this.yTile == y && frame.isPaused) {
-                    g.setColor(new Color(0, 0,0));
-                    g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                if(frame.isPaused) {
+                    if (this.xTile == x && this.yTile == y) {
+                        g.setColor(new Color(0, 0, 0));
+                        g.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                    }
                 }
             }
         }
@@ -85,6 +96,26 @@ public class GamePanel extends JPanel implements MouseListener {
         this.xTile = -1;
         this.yTile = -1;
         animal.unmark();
+    }
+
+    public void markAnimalsWithDominantGene(Animal animal) {
+        for(Field field : world.getMap().values()) {
+            if(field.isAnimalExists() && field.strongestAnimal().getDominantGene() == animal.getDominantGene()) {
+                field.strongestAnimal().markDominant();
+            }
+        }
+
+        repaint();
+    }
+
+    public void unmarkAnimalsWithDominantGene(Animal animal) {
+        for(Field field : world.getMap().values()) {
+            if(field.isAnimalExists() && field.strongestAnimal().getDominantGene() == animal.getDominantGene()) {
+                field.strongestAnimal().unmarkDominant();
+            }
+        }
+
+        repaint();
     }
 
     @Override

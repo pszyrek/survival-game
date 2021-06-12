@@ -1,7 +1,5 @@
 package agh.cs.sg;
 
-import agh.cs.sg.grass.Grass;
-
 import java.util.*;
 
 public class SimulationEngine implements IEngine {
@@ -37,6 +35,8 @@ public class SimulationEngine implements IEngine {
         world.resetValueOfAnimalsEnergy();
         world.resetNumberOfGrass();
         world.resetNumberOfChildren();
+        world.resetLifeTimeForDeadAnimals();
+        world.resetDominantGeneCounter();
         List<Animal> animals = new ArrayList<>();
 
         for(int i = 0; i < GameConfiguration.grassSizeRespawn; i++) {
@@ -54,10 +54,18 @@ public class SimulationEngine implements IEngine {
             }
         }
 
+        for(Animal deadAnimal : world.getDeadAnimalsList()) {
+            world.increaseLifeTimeForDeadAnimals(deadAnimal.getLifeTime());
+        }
+
         for(Animal animal : animals) {
             world.increaseNumberOfAnimals();
             world.increaseValueOfAnimalsEnergy(animal.getEnergy());
             world.increaseNumberOfChildren(animal.getNumberOfChildren());
+
+            world.updateDominantGenes(animal.getDominantGene());
+
+
             animal.move();
         }
     }

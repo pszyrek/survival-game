@@ -1,6 +1,7 @@
 package agh.cs.sg;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class Vector2d { // opisać vector2d
     private final int x;
@@ -66,6 +67,27 @@ public class Vector2d { // opisać vector2d
 
     public Vector2d opposite() {
         return new Vector2d(-(this.x), -(this.y));
+    }
+
+    public Vector2d getRandomNextToPosition() {
+        Random rand = new Random();
+
+        int minX = this.x - 1;
+        int maxX = this.x + 1;
+
+        int minY = this.y - 1;
+        int maxY = this.y + 1;
+
+        Vector2d demandPosition = this;
+
+        while(demandPosition == this) {
+            int randX = rand.nextInt(maxX - minX + 1) + minX;
+            int randY = rand.nextInt(maxY - minY + 1) + minY;
+
+            demandPosition = new Vector2d(randX, randY);
+        }
+
+        return demandPosition;
     }
 
     @Override

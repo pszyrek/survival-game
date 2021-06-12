@@ -1,0 +1,16 @@
+{
+    "title": "Survival Game",
+    "width": "100",
+    "height": "100",
+    "tileSize": "7",
+    "startNumberOfAnimals": "800",
+    "valueOfDecreasingEnergy": "1",
+    "numberOfWorlds": "1",
+    "grassSize": "800",
+    "grassSizeRespawn": "60",
+    "delay": "60",
+    "initialValueOfAnimalEnergy": "20",
+    "jungleEnergyValue": "8",
+    "steppeEnergyValue": "4",
+    "jungleRatio": "40"
+}

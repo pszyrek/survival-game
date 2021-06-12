@@ -11,17 +11,20 @@ public class Menu implements ActionListener {
     JFrame frame = new JFrame();
     JPanel panel = new JPanel();
     JButton button = new JButton("Run");
-    Container widthContainer = createContainer(GameConfiguration.width,  "Width of map");;
+    Container widthContainer = createContainer(GameConfiguration.width,  "Width of map");
     Container heightContainer = createContainer(GameConfiguration.height,  "Height of map");
     Container tileSizeContainer = createContainer(GameConfiguration.tileSize,  "Size of one tile on map");
     Container startNumberOfAnimalsContainer = createContainer(GameConfiguration.startNumberOfAnimals,  "Start number of animals on map");
     Container valueOfDecreasingEnergyContainer = createContainer(GameConfiguration.valueOfDecreasingEnergy,  "Value of decreasing energy of animal");
-    Container minEnergyToReproduceContainer = createContainer(GameConfiguration.minEnergyToReproduce,  "Minimal energy to reproduce");
+    Container minEnergyToReproduceContainer = createContainer(GameConfiguration.initialValueOfAnimalEnergy / 2,  "Minimal energy to reproduce");
     Container numberOfWorlds = createContainer(GameConfiguration.numberOfWorlds,  "Number of worlds");
     Container grassSize = createContainer(GameConfiguration.grassSize,  "Number of grass");
     Container grassSizeRespawn = createContainer(GameConfiguration.grassSizeRespawn,  "Number of grass to respawn");
     Container delay = createContainer(GameConfiguration.delay,  "Delay (in milliseconds)");
     Container initialValueOfAnimalEnergy = createContainer(GameConfiguration.initialValueOfAnimalEnergy,  "InitialValue of Animal energy");
+    Container jungleEnergyValue = createContainer(GameConfiguration.jungleEnergyValue,  "Jungle grass energy value");
+    Container steppeEnergyValue = createContainer(GameConfiguration.steppeEnergyValue,  "Steppe grass energy value");
+    Container jungleRatio = createContainer(GameConfiguration.jungleRatio,  "Jungle ratio to map");
 
     private Container createContainer(int defaultValue, String labelValue) {
         Container container = new Container(); // Object który może zawierać inne elementy AWT
@@ -74,6 +77,9 @@ public class Menu implements ActionListener {
         panel.add(grassSizeRespawn);
         panel.add(delay);
         panel.add(initialValueOfAnimalEnergy);
+        panel.add(jungleEnergyValue);
+        panel.add(steppeEnergyValue);
+        panel.add(jungleRatio);
 
         button.addActionListener(this);
         panel.add(button);
@@ -99,6 +105,9 @@ public class Menu implements ActionListener {
             GameConfiguration.grassSizeRespawn = getFieldValue(grassSizeRespawn);
             GameConfiguration.delay = getFieldValue(delay);
             GameConfiguration.initialValueOfAnimalEnergy = getFieldValue(initialValueOfAnimalEnergy);
+            GameConfiguration.jungleEnergyValue = getFieldValue(jungleEnergyValue);
+            GameConfiguration.steppeEnergyValue = getFieldValue(steppeEnergyValue);
+            GameConfiguration.jungleRatio = getFieldValue(jungleRatio);
 
             for(int i = 0; i < GameConfiguration.numberOfWorlds; i++) {
                 Game game = new Game();

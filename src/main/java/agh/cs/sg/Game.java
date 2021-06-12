@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 public class Game implements Runnable {
     private GameFrame gameFrame;
     public int width, height;
-    private final int valueOfDecreasingEnergy = GameConfiguration.valueOfDecreasingEnergy;
 
     private volatile boolean pauseWork = false;
     private Thread workerThread;

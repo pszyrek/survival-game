@@ -4,18 +4,27 @@ import agh.cs.sg.Animal;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class AnimalStatsPopup extends JFrame {
+public class AnimalStatsPopup extends JFrame implements ActionListener {
     JPanel panel = new JPanel();
     Animal animal;
+
+    GamePanel gamePanel;
 
     Container energy;
     Container position;
     Container genes;
     Container numberOfChildren;
     Container numberOfDescendants;
+    Container era;
+
+    JButton markDominant = new JButton("Mark dominant");
+    JButton unmarkDominant = new JButton("Unmark dominant");
+
 
     AnimalStatsPopup(Animal animal, GamePanel gamePanel) {
         panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
@@ -28,12 +37,24 @@ public class AnimalStatsPopup extends JFrame {
         this.genes = createContainer("Genes", animal.getGenes().toString());
         this.numberOfChildren  = createContainer("Number of children", String.valueOf(animal.getNumberOfChildren()));
         this.numberOfDescendants = createContainer("Number of descendants", String.valueOf(animal.getNumberOfDescendants()));
+        this.era = createContainer("Era", String.valueOf(animal.getLifeTime()));
+
+
+
+        this.gamePanel = gamePanel;
 
         panel.add(energy);
         panel.add(position);
         panel.add(genes);
         panel.add(numberOfChildren);
         panel.add(numberOfDescendants);
+        panel.add(era);
+
+        markDominant.addActionListener(this);
+        panel.add(markDominant);
+
+        unmarkDominant.addActionListener(this);
+        panel.add(unmarkDominant);
 
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -72,5 +93,16 @@ public class AnimalStatsPopup extends JFrame {
         updateContainer(genes, animal.getGenes().toString());
         updateContainer(numberOfChildren, String.valueOf(animal.getNumberOfChildren()));
         updateContainer(numberOfDescendants, String.valueOf(animal.getNumberOfDescendants()));
+        updateContainer(era, String.valueOf(animal.getLifeTime()));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == markDominant) {
+            gamePanel.markAnimalsWithDominantGene(animal);
+        }
+        if(e.getSource() == unmarkDominant) {
+            gamePanel.unmarkAnimalsWithDominantGene(animal);
+        }
     }
 }
